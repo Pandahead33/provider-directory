@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Epilogue&family=Open+Sans&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Epilogue&family=Open+Sans&display=swap");
 
 :root {
   --header-font: "Epilogue";
@@ -8,7 +8,7 @@
 }
 
 body {
-  font-size: 16px; 
+  font-size: 16px;
   font-family: var(--body-font), var(--backup-body-font), sans-serif;
 }
 
@@ -28,8 +28,7 @@ label > div {
   font-family: var(--header-font), var(--backup-header-font), sans-serif;
 }
 
-input[type=submit] {
-  width: 170px;
+input[type="submit"] {
 }
 
 .required-field {
@@ -38,5 +37,10 @@ input[type=submit] {
 
 .required-field::after {
   content: "*";
+  color: red;
+}
+
+.error-messages ul {
+  list-style-type: none;
   color: red;
 }
