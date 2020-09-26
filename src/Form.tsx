@@ -3,6 +3,8 @@ import React, { ReactElement } from "react";
 interface FormState {
   firstNameValue: string;
   lastNameValue: string;
+  emailAddressValue: string;
+  [key: string]: any
 }
 
 class Form extends React.Component<unknown, FormState> {
@@ -10,61 +12,62 @@ class Form extends React.Component<unknown, FormState> {
     super({});
     this.state = {
       firstNameValue: "Bob",
-      lastNameValue: "Smith"
+      lastNameValue: "Smith",
+      emailAddressValue: "test@gmail.com"
     };
 
-    this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
-    this.handleLastNameChange = this.handleLastNameChange.bind(this);
+    this.handleFormChange = this.handleFormChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleFirstNameChange(event: React.SyntheticEvent): void {
+  handleFormChange(event: React.SyntheticEvent): void {
     const target = event.target as HTMLInputElement;
+    const name = target.name;
 
     this.setState({
-      firstNameValue: target.value,
-    });
-  }
-
-  handleLastNameChange(event: React.SyntheticEvent): void {
-    const target = event.target as HTMLInputElement;
-
-    this.setState({
-        lastNameValue: target.value,
+        [name]: target.value,
     });
   }
 
   handleSubmit(event: React.SyntheticEvent): void {
     event.preventDefault();
-    let json = {
-        firstName: this.state.firstNameValue,
-        lastName: this.state.lastNameValue
-    }
-    alert(`Hello, ${json.firstName} ${json.lastName}!`);
+    alert(`Hello, ${this.state.firstName} ${this.state.lastName}! Expect an email at ${this.state.emailAddress}`);
   }
 
   render(): ReactElement {
     return (
       <form onSubmit={this.handleSubmit}>
+        <div className="error-message"></div>
         <label htmlFor="firstName">
-          First Name:
+          <div className="required-field">First Name</div>
           <input
             type="text"
             id="firstName"
-            name="firstName"
+            name="firstNameValue"
             value={this.state.firstNameValue}
-            onChange={this.handleFirstNameChange}
+            onChange={this.handleFormChange}
             required
           />
         </label>
         <label htmlFor="lastName">
-            Last Name:
+            <div className="required-field">Last Name</div>
             <input
                 type="text"
                 id="lastName"
-                name="lastName"
+                name="lastNameValue"
                 value={this.state.lastNameValue}
-                onChange={this.handleLastNameChange}
+                onChange={this.handleFormChange}
+                required
+            />
+        </label>
+        <label htmlFor="emailAddress">
+            <div className="required-field">Email Address</div>
+            <input
+                type="email"
+                id="emailAddress"
+                name="emailAddressValue"
+                value={this.state.emailAddressValue}
+                onChange={this.handleFormChange}
                 required
             />
         </label>

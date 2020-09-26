@@ -1,5 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Epilogue&family=Open+Sans&display=swap');
+
+:root {
+  --header-font: "Epilogue";
+  --backup-header-font: sans-serif;
+  --body-font: "Open Sans";
+  --backup-body-font: sans-serif;
+}
+
+body {
+  font-size: 16px; 
+  font-family: var(--body-font), var(--backup-body-font), sans-serif;
+}
+
 form {
   display: flex;
   flex-direction: column;
   row-gap: 10px;
+}
+
+input {
+  height: 44px;
+  min-width: 44px;
+  font-family: var(--body-font), var(--backup-body-font), sans-serif;
+}
+
+label > div {
+  font-family: var(--header-font), var(--backup-header-font), sans-serif;
+}
+
+input[type=submit] {
+  width: 170px;
+}
+
+.required-field {
+  line-height: 1.6;
+}
+
+.required-field::after {
+  content: "*";
+  color: red;
 }
