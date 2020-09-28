@@ -4,9 +4,11 @@ interface FormState {
   firstName: string;
   lastName: string;
   emailAddress: string;
+  speciality: string;
+  practiceName: string;
   errorMessages: Map<string, string>;
   /* eslint-disable */
-  // to access fields by using [fieldName], this needs to accept 
+  // to access fields by using [fieldName], this needs to accept
   // any type, which eslint will always warn about
   [key: string]: any;
   /* eslint-enable */
@@ -16,20 +18,25 @@ enum Fields {
   FIRST_NAME = "firstName",
   LAST_NAME = "lastName",
   EMAIL_ADDRESS = "emailAddress",
+  SPECIALITY = "speciality",
+  PRACTICE_NAME = "practiceName",
 }
 
-class Form extends React.Component<unknown, FormState> {
-  constructor() {
-    super({});
+class AddContactForm extends React.Component<unknown, FormState> {
+  constructor(props: unknown) {
+    super(props);
     this.state = {
       firstName: "",
       lastName: "",
       emailAddress: "",
+      speciality: "N/A",
+      practiceName: "",
       errorMessages: new Map(),
     };
 
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.resetForm = this.resetForm.bind(this);
   }
 
   handleFormChange(event: React.SyntheticEvent): void {
@@ -37,7 +44,7 @@ class Form extends React.Component<unknown, FormState> {
     const name = target.name;
     const errorMessages = new Map(this.state.errorMessages);
 
-    function validateFormInput() {
+    const validateFormInput = () => {
       const isNameField = () =>
         [Fields.FIRST_NAME.toString(), Fields.LAST_NAME.toString()].includes(
           name
@@ -47,6 +54,22 @@ class Form extends React.Component<unknown, FormState> {
       const capitalizeFieldName = (string: string) =>
         string.charAt(0).toUpperCase() +
         string.slice(1).replace(/([A-Z])/g, " $1");
+      const isValidEmail = (emailValue: string) =>
+        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/.test(
+          emailValue
+        );
+
+      if (
+        name === Fields.EMAIL_ADDRESS.toString() &&
+        !isValidEmail(target.value)
+      ) {
+        errorMessages.set(
+          Fields.EMAIL_ADDRESS,
+          `${capitalizeFieldName(
+            Fields.EMAIL_ADDRESS
+          )} must be in example@gmail.com format.`
+        );
+      }
 
       if (isNameField() && hasNumber(target.value)) {
         errorMessages.set(
@@ -57,7 +80,7 @@ class Form extends React.Component<unknown, FormState> {
         // remove error message, since there it passed validation
         errorMessages.delete(name);
       }
-    }
+    };
 
     validateFormInput();
 
@@ -79,10 +102,21 @@ class Form extends React.Component<unknown, FormState> {
 
     const errorMessages = new Map(this.state.errorMessages);
 
-    function validateFormSubmission() {
-      const capitalizeFieldName = (string: string) =>
-        string.charAt(0).toUpperCase() +
-        string.slice(1).replace(/([A-Z])/g, " $1");
+    const validateFormSubmission = () => {
+      const capitalizeFieldName = (fieldName: string) =>
+        fieldName.charAt(0).toUpperCase() +
+        fieldName.slice(1).replace(/([A-Z])/g, " $1");
+      const isValidEmail = (emailValue: string) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+
+      if (!isValidEmail(this.state.emailAddress)) {
+        errorMessages.set(
+          Fields.EMAIL_ADDRESS,
+          `${capitalizeFieldName(
+            Fields.EMAIL_ADDRESS
+          )} must be in example@gmail.com format.`
+        );
+      }
 
       // check if fields are empty
       fieldValues.forEach((fieldValue, fieldName) => {
@@ -93,10 +127,9 @@ class Form extends React.Component<unknown, FormState> {
           );
         }
       });
-    }
+    };
 
     validateFormSubmission();
-    console.log(errorMessages);
 
     if (!target.checkValidity() || errorMessages.size > 0) {
       console.log("fail");
@@ -111,6 +144,17 @@ class Form extends React.Component<unknown, FormState> {
     );
   }
 
+  resetForm(): void {
+    this.setState({
+      firstName: "",
+      lastName: "",
+      emailAddress: "",
+      speciality: "N/A",
+      practiceName: "",
+      errorMessages: new Map(),
+    });
+  }
+
   render(): ReactElement {
     const displayedErrorMessages = [];
 
@@ -121,51 +165,86 @@ class Form extends React.Component<unknown, FormState> {
     }
 
     return (
-      <form onSubmit={this.handleSubmit} noValidate>
+      <div>
         <div className="error-messages">
           <ul>{displayedErrorMessages}</ul>
         </div>
-        <label htmlFor="firstName">
-          <div className="required-field">First Name</div>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={this.state.firstName}
-            onChange={this.handleFormChange}
-            placeholder="Bob"
-            required
-          />
-        </label>
-        <label htmlFor="lastName">
-          <div className="required-field">Last Name</div>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={this.state.lastName}
-            onChange={this.handleFormChange}
-            placeholder="Smith"
-            required
-          />
-        </label>
-        <label htmlFor="emailAddress">
-          <div className="required-field">Email Address</div>
-          <input
-            type="email"
-            id="emailAddress"
-            name="emailAddress"
-            value={this.state.emailAddress}
-            onChange={this.handleFormChange}
-            placeholder="test@email.com"
-            size={55}
-            required
-          />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+        <form onSubmit={this.handleSubmit} noValidate>
+          <label htmlFor="firstName">
+            <div className="required-field">First Name</div>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={this.state.firstName}
+              onChange={this.handleFormChange}
+              placeholder="Bob"
+              required
+            />
+          </label>
+          <label htmlFor="lastName">
+            <div className="required-field">Last Name</div>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={this.state.lastName}
+              onChange={this.handleFormChange}
+              placeholder="Smith"
+              required
+            />
+          </label>
+          <label htmlFor="emailAddress">
+            <div className="required-field">Email Address</div>
+            <input
+              type="email"
+              id="emailAddress"
+              name="emailAddress"
+              value={this.state.emailAddress}
+              onChange={this.handleFormChange}
+              placeholder="test@email.com"
+              size={55}
+              required
+            />
+          </label>
+          <label htmlFor="speciality">
+            <div>Speciality</div>
+            <select
+              id="speciality"
+              name="speciality"
+              value={this.state.speciality}
+              onChange={this.handleFormChange}
+            >
+              <option value="N/A">N/A</option>
+              <option value="General Medicine">General Medicine</option>
+              <option value="Orthopedics">Orthopedics</option>
+              <option value="Pediatrics">Pediatrics</option>
+              <option value="Podiatry">Podiatry</option>
+              <option value="Surgery">Surgery</option>
+              <option value="Somnologist">Somnologist</option>
+              <option value="Other">Other</option>
+            </select>
+          </label>
+          <label htmlFor="practiceName">
+            <div>Practice Name</div>
+            <input
+              type="text"
+              id="practiceName"
+              name="practiceName"
+              value={this.state.practiceName}
+              onChange={this.handleFormChange}
+              placeholder="Memorial Family Practice"
+              size={55}
+            />
+          </label>
+          <div className="buttonContainer">
+            <input type="submit" value="➕ Add Provider" />
+            <input type="button" value="Reset" onClick={this.resetForm} />
+          </div>
+        </form>
+      </div>
     );
   }
 }
 
-export default Form;
+export default AddContactForm;
