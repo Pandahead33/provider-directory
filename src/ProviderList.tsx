@@ -14,6 +14,9 @@ interface ProviderListProps {
 interface ProviderListState {
   sortBy: string;
   sortDirection: SortDirection;
+  searchTerm: string;
+  showSearchResults: boolean;
+  searchResults: Array<Contact>;
   /* eslint-disable */
   // to access fields by using [fieldName], this needs to accept
   // any type, which eslint will always warn about
@@ -30,9 +33,14 @@ class ProviderList extends React.Component<
     this.state = {
       sortBy: "lastName",
       sortDirection: SortDirection.ascending,
+      searchTerm: "",
+      searchResults: [],
+      showSearchResults: false,
     };
 
     this.changeSortByFieldDropdown = this.changeSortByFieldDropdown.bind(this);
+    this.updateSearchTerm = this.updateSearchTerm.bind(this);
+    this.searchProviderList = this.searchProviderList.bind(this);
     this.setSortDirection = this.setSortDirection.bind(this);
   }
 
@@ -62,6 +70,41 @@ class ProviderList extends React.Component<
     );
   }
 
+  updateSearchTerm(event: React.SyntheticEvent): void {
+    const target = event.target as HTMLInputElement;
+    console.log("bo");
+    this.setState({
+      searchTerm: target.value,
+    });
+  }
+
+  searchProviderList(): void {
+    let searchResults = [...this.props.contacts];
+    const fitsSearchCriteria = (contact: Contact) =>
+      Object.values(contact).reduce(
+        (boolean: boolean, field) =>
+          field.toUpperCase().includes(this.state.searchTerm.toUpperCase()) ||
+          boolean,
+        false
+      );
+
+    searchResults = searchResults.reduce(
+      (contacts: Array<Contact>, contact) => {
+        if (fitsSearchCriteria(contact)) {
+          contacts.push(contact);
+        }
+        return contacts;
+      },
+      []
+    );
+
+    this.setState({
+      searchResults: searchResults,
+      showSearchResults: !!this.state.searchTerm,
+    });
+    console.log(searchResults);
+  }
+
   sortByField(): void {
     const fieldName = this.state.sortBy;
     const providerContacts = this.props.contacts;
@@ -76,15 +119,13 @@ class ProviderList extends React.Component<
 
       return 0;
     });
-
-    this.setState({
-      contacts: providerContacts,
-    });
   }
 
   render(): ReactElement {
     const cells: Array<ReactElement> = [];
-    const data = this.props.contacts;
+    const data = this.state.showSearchResults
+      ? this.state.searchResults
+      : this.props.contacts;
 
     data.forEach((record) => {
       const recordValues = Object.values(record);
@@ -99,11 +140,14 @@ class ProviderList extends React.Component<
 
       cells.push(
         <div key={JSON.stringify(record) + " delete"} className="cell">
+          <button className="action-button">
+            <span>🖊️</span> Edit
+          </button>
           <button
-            className="delete-button"
+            className="action-button"
             onClick={() => this.props.deleteProvider(record)}
           >
-            ❌ Delete
+            <span>❌</span> Delete
           </button>
         </div>
       );
@@ -115,12 +159,24 @@ class ProviderList extends React.Component<
       providerDataTable = (
         <div style={{ height: "0" }}>
           <div className="provider-table-heading">
-            <div className="table-header">First Name</div>
-            <div className="table-header">Last Name</div>
-            <div className="table-header">Email Address</div>
-            <div className="table-header">Speciality</div>
-            <div className="table-header">Practice Name</div>
-            <div className="table-header">Action</div>
+            <div className="table-header">
+              <p>First Name</p>
+            </div>
+            <div className="table-header">
+              <p>Last Name</p>
+            </div>
+            <div className="table-header">
+              <p>Email Address</p>
+            </div>
+            <div className="table-header">
+              <p>Speciality</p>
+            </div>
+            <div className="table-header">
+              <p>Practice Name</p>
+            </div>
+            <div className="table-header">
+              <p>Action</p>
+            </div>
           </div>
           <div className="search-results-container">{cells}</div>
         </div>
@@ -131,12 +187,29 @@ class ProviderList extends React.Component<
       <div className="provider-list">
         <div className="search-container">
           <h1>Provider List</h1>
+          <input
+            className="add-new-provider-button"
+            type="button"
+            value="➕ Add New Provider"
+          />
           <div className="search-bar-container">
-            <input className="search" type="search" />
-            <input type="button" value="Search" />
-            <input type="button" value="Add New Provider" />
+            <input
+              className="search"
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  this.searchProviderList();
+                }
+              }}
+              onChange={this.updateSearchTerm}
+              type="search"
+            />
+            <input
+              type="button"
+              value="Search"
+              onClick={this.searchProviderList}
+            />
             <label htmlFor="sortBy">
-              <div className="sortByLabel">Sort By</div>
+              <div className="sort-by-label">Sort By</div>
               <select
                 id="sortBy"
                 name="sortBy"

@@ -63,7 +63,7 @@ class ProviderDirectoryApp extends React.Component<
 
   addRow(record: Contact): void {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const contacts = history[history.length - 1].contacts.slice();
+    const contacts = [...history[history.length - 1].contacts];
     const nextStep = this.state.stepNumber + 1;
 
     contacts.push({
@@ -92,7 +92,7 @@ class ProviderDirectoryApp extends React.Component<
 
   deleteRow(record: Contact): void {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
-    const contacts = history[history.length - 1].contacts.slice();
+    const contacts = [...history[history.length - 1].contacts];
     const nextStep = this.state.stepNumber + 1;
 
     if (contacts.includes(record)) {
@@ -119,16 +119,22 @@ class ProviderDirectoryApp extends React.Component<
   }
 
   jumpTo(step: number): void {
-    this.setState({
-      stepNumber: step,
-    });
+    this.setState(
+      {
+        stepNumber: step,
+      },
+      this.updateLocalStorage
+    );
   }
 
   resetHistory(): void {
-    this.setState({
-      history: [],
-      stepNumber: 0
-    }, this.updateLocalStorage)
+    this.setState(
+      {
+        history: [],
+        stepNumber: 0,
+      },
+      this.updateLocalStorage
+    );
   }
 
   generateActionHistoryList(
@@ -189,7 +195,7 @@ class ProviderDirectoryApp extends React.Component<
   }
 
   render(): ReactElement {
-    const history: Array<History> = this.state.history.slice();
+    const history: Array<History> = [...this.state.history];
     const current = history[this.state.stepNumber];
     const historyList = this.generateActionHistoryList(history);
 
