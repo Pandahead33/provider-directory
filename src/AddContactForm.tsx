@@ -1,4 +1,9 @@
 import React, { ReactElement } from "react";
+import { Contact } from "./Contact";
+
+interface FormProps {
+  addNewProvider: (record: Contact) => void;
+}
 
 interface FormState {
   firstName: string;
@@ -22,8 +27,8 @@ enum Fields {
   PRACTICE_NAME = "practiceName",
 }
 
-class AddContactForm extends React.Component<unknown, FormState> {
-  constructor(props: unknown) {
+class AddContactForm extends React.Component<FormProps, FormState> {
+  constructor(props: FormProps) {
     super(props);
     this.state = {
       firstName: "",
@@ -132,16 +137,13 @@ class AddContactForm extends React.Component<unknown, FormState> {
     validateFormSubmission();
 
     if (!target.checkValidity() || errorMessages.size > 0) {
-      console.log("fail");
       this.setState({
         errorMessages: errorMessages,
       });
       return;
     }
 
-    alert(
-      `Hello, ${this.state.firstName} ${this.state.lastName}! Expect an email at ${this.state.emailAddress}`
-    );
+    this.props.addNewProvider(this.state);
   }
 
   resetForm(): void {
@@ -165,7 +167,8 @@ class AddContactForm extends React.Component<unknown, FormState> {
     }
 
     return (
-      <div>
+      <div className="form">
+        <h1>Add Provider</h1>
         <div className="error-messages">
           <ul>{displayedErrorMessages}</ul>
         </div>
@@ -237,7 +240,7 @@ class AddContactForm extends React.Component<unknown, FormState> {
               size={55}
             />
           </label>
-          <div className="buttonContainer">
+          <div className="button-container">
             <input type="submit" value="➕ Add Provider" />
             <input type="button" value="Reset" onClick={this.resetForm} />
           </div>

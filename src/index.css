@@ -31,7 +31,7 @@ main {
   min-height: 100vh;
   grid-template-areas:
     "form search search"
-    "form results results";
+    "form actionHistory actionHistory";
   grid-template-columns: 1fr 3fr;
   grid-template-rows: 1fr 250px;
   column-gap: 10px;
@@ -49,14 +49,14 @@ main > div {
   padding: 0px 10px 10px 20px;
 }
 
-main > .params {
+main > .provider-list {
   grid-area: search;
   overflow: hidden;
   min-height: 500px;
 }
 
-main > .results {
-  grid-area: results;
+main > .action-history {
+  grid-area: actionHistory;
 }
 
 main > .form {
@@ -98,7 +98,7 @@ input:active {
   width: auto;
 }
 
-ul {
+.error-messages ul {
   text-align: left;
   padding: 0;
   width: auto;
@@ -107,9 +107,38 @@ ul {
   row-gap: 10px;
 }
 
-li {
+.error-messages ul li {
   background-color: hsl(11, 100%, 96%);
   padding: 10px;
+}
+
+.action-history {
+  overflow: hidden;
+}
+
+.action-history ol {
+  max-height: 137px;
+  overflow-y: scroll;
+  list-style-type: none;
+  background-color: grey;
+  text-align: left;
+  padding: 0;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.action-history ol li {
+  background-color: hsl(0, 0%, 79%);
+  padding: 10px;
+}
+
+.action-history ol li:nth-child(2n) {
+  background-color: hsl(0, 0%, 91%);
+}
+
+.action-history ol li .undo-button {
+  text-align: right;
 }
 
 label > div {
@@ -126,11 +155,11 @@ input[type="radio"] {
   height: 22px;
 }
 
-.sortDirection {
+.sort-direction {
   margin-top: -10px;
 }
 
-.buttonContainer {
+.button-container {
   display: flex;
   column-gap: 10px;
 }
@@ -152,39 +181,39 @@ input[type="submit"]:hover {
   color: red;
 }
 
-.providerTable {
+.provider-table-heading {
   margin-top: 30px;
   display: grid;
   grid-template-columns: repeat(5, 1fr) 0.5fr;
   margin-right: 15px;
 }
 
-.searchResultsContainer {
+.search-results-container {
   display: grid;
   grid-template-columns: repeat(5, 1fr) 0.5fr;
   overflow-y: scroll;
   max-height: 44.5vh;
 }
 
-.searchResultsContainer > .cell {
+.search-results-container > .cell {
   background-color: hsl(0, 0%, 79%);
   padding: 10px;
 }
 
-.deleteButton {
+.delete-button {
   padding: 5px;
 }
 
-.searchContainer {
+.search-container {
   max-height: 500px;
 }
 
-.searchBarContainer {
+.search-bar-container {
   display: flex;
   column-gap: 10px;
 }
 
-.searchHeader {
+.search-header {
   padding: 0;
   margin-bottom: 0;
 }
@@ -192,6 +221,10 @@ input[type="submit"]:hover {
 .search {
   margin-bottom: 10px;
   flex: 3;
+}
+
+.undo-button {
+  margin-left: 10px;
 }
 
 .cell {
@@ -229,14 +262,23 @@ input[type="submit"]:hover {
     height: auto;
     grid-template-areas:
       "form"
-      "search";
+      "search"
+      "actionHistory";
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 0 2fr 1fr;
     column-gap: 10px;
     row-gap: 10px;
   }
 
-  .providerTable {
+  main > .form {
+    display: none;
+  }
+
+  .search-results-container > .cell {
+    padding: 0 10px;
+  }
+
+  .provider-table-heading {
     display: grid;
     grid-template-columns: repeat(5, 1fr) 0.5fr;
     background-color: black;
@@ -275,14 +317,14 @@ input[type="submit"]:hover {
     grid-template-areas:
       "form"
       "search"
-      "search";
+      "actionHistory";
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     column-gap: 10px;
     row-gap: 10px;
   }
 
-  main > .results {
+  main > .action-history {
     display: none;
   }
 
@@ -298,10 +340,6 @@ input[type="submit"]:hover {
 
   input {
     max-width: 100%;
-  }
-
-  .searchHeader {
-    margin-bottom: 40px;
   }
 
   .table-header {
@@ -334,13 +372,13 @@ input[type="submit"]:hover {
     content: "Last Name";
   }
 
-  .searchResultsContainer {
+  .search-results-container {
     display: grid;
     grid-template-columns: 1fr;
     overflow: visible;
   }
 
-  main > .params {
+  main > .provider-list {
     grid-area: search;
     overflow: visible;
   }
