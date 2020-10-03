@@ -247,7 +247,7 @@ input[type="radio"] {
   background-color: hsl(0, 0%, 91%);
 }
 
-.provider-list > .cell > p {
+.provider-list .cell > p {
   word-break: break-word;
 }
 

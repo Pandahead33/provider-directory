@@ -194,10 +194,15 @@ class ProviderDirectoryApp extends React.Component<
     return historyList.reverse();
   }
 
+  generateActionForm(): ReactElement {
+    return <AddContactForm addNewProvider={this.addRow} />;
+  }
+
   render(): ReactElement {
     const history: Array<History> = [...this.state.history];
     const current = history[this.state.stepNumber];
     const historyList = this.generateActionHistoryList(history);
+    const actionForm = this.generateActionForm();
 
     return (
       <main>
@@ -209,7 +214,7 @@ class ProviderDirectoryApp extends React.Component<
           <h1>Action History</h1>
           <ol>{historyList}</ol>
         </div>
-        <AddContactForm addNewProvider={this.addRow} />
+        {actionForm}
       </main>
     );
   }

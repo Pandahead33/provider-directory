@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import { Contact } from "./Contact";
+import Fields from "./Fields";
 
 interface FormProps {
   addNewProvider: (record: Contact) => void;
@@ -14,17 +15,9 @@ interface FormState {
   errorMessages: Map<string, string>;
   /* eslint-disable */
   // to access fields by using [fieldName], this needs to accept
-  // any type, which eslint will always warn about
+  // any type- which eslint intentionally warns about
   [key: string]: any;
   /* eslint-enable */
-}
-
-enum Fields {
-  FIRST_NAME = "firstName",
-  LAST_NAME = "lastName",
-  EMAIL_ADDRESS = "emailAddress",
-  SPECIALITY = "speciality",
-  PRACTICE_NAME = "practiceName",
 }
 
 class AddContactForm extends React.Component<FormProps, FormState> {
@@ -38,64 +31,21 @@ class AddContactForm extends React.Component<FormProps, FormState> {
       practiceName: "",
       errorMessages: new Map(),
     };
-
-    this.handleFormChange = this.handleFormChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.resetForm = this.resetForm.bind(this);
   }
 
-  handleFormChange(event: React.SyntheticEvent): void {
+  handleFormChange = (event: React.SyntheticEvent): void => {
     const target = event.target as HTMLInputElement;
     const name = target.name;
-    const errorMessages = new Map(this.state.errorMessages);
+    const errorMessages = this.validateFormInput(target);
 
-    const validateFormInput = () => {
-      const isNameField = () =>
-        [Fields.FIRST_NAME.toString(), Fields.LAST_NAME.toString()].includes(
-          name
-        );
-      const hasNumber = (string: string) => /\d/.test(string);
-      const hasPreviouslyHadError = () => !!errorMessages.get(name);
-      const capitalizeFieldName = (string: string) =>
-        string.charAt(0).toUpperCase() +
-        string.slice(1).replace(/([A-Z])/g, " $1");
-      const isValidEmail = (emailValue: string) =>
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/.test(
-          emailValue
-        );
-
-      if (
-        name === Fields.EMAIL_ADDRESS.toString() &&
-        !isValidEmail(target.value)
-      ) {
-        errorMessages.set(
-          Fields.EMAIL_ADDRESS,
-          `${capitalizeFieldName(
-            Fields.EMAIL_ADDRESS
-          )} must be in example@gmail.com format.`
-        );
-      }
-
-      if (isNameField() && hasNumber(target.value)) {
-        errorMessages.set(
-          name,
-          `${capitalizeFieldName(name)} should not include numbers`
-        );
-      } else if (hasPreviouslyHadError()) {
-        // remove error message, since there it passed validation
-        errorMessages.delete(name);
-      }
-    };
-
-    validateFormInput();
-
+    console.log(errorMessages);
     this.setState({
       [name]: target.value,
       errorMessages: errorMessages,
     });
   }
 
-  handleSubmit(event: React.FormEvent<HTMLFormElement>): void {
+  handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const target = event.target as HTMLFormElement;
 
@@ -105,36 +55,7 @@ class AddContactForm extends React.Component<FormProps, FormState> {
       [Fields.EMAIL_ADDRESS, this.state.emailAddress],
     ]);
 
-    const errorMessages = new Map(this.state.errorMessages);
-
-    const validateFormSubmission = () => {
-      const capitalizeFieldName = (fieldName: string) =>
-        fieldName.charAt(0).toUpperCase() +
-        fieldName.slice(1).replace(/([A-Z])/g, " $1");
-      const isValidEmail = (emailValue: string) =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
-
-      if (!isValidEmail(this.state.emailAddress)) {
-        errorMessages.set(
-          Fields.EMAIL_ADDRESS,
-          `${capitalizeFieldName(
-            Fields.EMAIL_ADDRESS
-          )} must be in example@gmail.com format.`
-        );
-      }
-
-      // check if fields are empty
-      fieldValues.forEach((fieldValue, fieldName) => {
-        if (!fieldValue) {
-          errorMessages.set(
-            fieldName,
-            `${capitalizeFieldName(fieldName)} cannot be empty`
-          );
-        }
-      });
-    };
-
-    validateFormSubmission();
+    const errorMessages = this.validateFormSubmission(fieldValues);
 
     if (!target.checkValidity() || errorMessages.size > 0) {
       this.setState({
@@ -144,9 +65,104 @@ class AddContactForm extends React.Component<FormProps, FormState> {
     }
 
     this.props.addNewProvider(this.state);
-  }
+  };
 
-  resetForm(): void {
+  validateFormInput = (target: HTMLInputElement):Map<string, string> => {
+    let errorMessages = new Map(this.state.errorMessages);
+    const name = target.name;
+    const EMPTY_STRING = "";
+    const isNameField = () =>
+      [Fields.FIRST_NAME.toString(), Fields.LAST_NAME.toString()].includes(
+        name
+      );
+    const hasNumber = (string: string) => /\d/.test(string);
+    const hasPreviouslyHadError = () => errorMessages.get(name);
+    const capitalizeFieldName = (string: string) =>
+      string.charAt(0).toUpperCase() +
+      string.slice(1).replace(/([A-Z])/g, " $1");
+    const isValidEmail = (emailValue: string) =>
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)*$/.test(
+        emailValue
+      );
+
+    const validateEmailChange = () => {
+      if (!isValidEmail(target.value)) {
+        errorMessages.set(
+          name,
+          `${capitalizeFieldName(
+            Fields.EMAIL_ADDRESS
+          )} must be in example@gmail.com format.`
+        );
+      } else if (hasPreviouslyHadError()) {
+        // remove error message, since there it passed validation
+        errorMessages.delete(name);
+      }
+    }
+
+    const validateNameChange = () => { 
+      if (hasNumber(target.value)) {
+        errorMessages.set(
+          name,
+          `${capitalizeFieldName(name)} should not include numbers`
+        );
+      } else if (hasPreviouslyHadError()) {
+        // remove error message, since there it passed validation
+        errorMessages.delete(name);
+      }
+    }
+
+    if(target.value === EMPTY_STRING) {
+      errorMessages.delete(name);
+      return errorMessages;
+    }
+
+    switch(name) {
+      case Fields.EMAIL_ADDRESS.toString():
+        validateEmailChange();
+        break;
+      case Fields.FIRST_NAME.toString():
+      case Fields.LAST_NAME.toString():
+        validateNameChange();
+        break;  
+      default:
+        // no special validation
+        break;
+    }
+
+    return errorMessages;
+  };
+
+  validateFormSubmission = (fieldValues: Map<Fields, string>): Map<string, string> => {
+    const errorMessages = new Map(this.state.errorMessages);
+    const capitalizeFieldName = (fieldName: string) =>
+      fieldName.charAt(0).toUpperCase() +
+      fieldName.slice(1).replace(/([A-Z])/g, " $1");
+    const isValidEmail = (emailValue: string) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue);
+
+    if (!isValidEmail(this.state.emailAddress)) {
+      errorMessages.set(
+        Fields.EMAIL_ADDRESS,
+        `${capitalizeFieldName(
+          Fields.EMAIL_ADDRESS
+        )} must be in example@gmail.com format.`
+      );
+    }
+
+    // check if fields are empty
+    fieldValues.forEach((fieldValue, fieldName) => {
+      if (!fieldValue) {
+        errorMessages.set(
+          fieldName,
+          `${capitalizeFieldName(fieldName)} cannot be empty`
+        );
+      }
+    });
+
+    return errorMessages;
+  };
+
+  resetForm = ():void => {
     this.setState({
       firstName: "",
       lastName: "",
@@ -242,7 +258,7 @@ class AddContactForm extends React.Component<FormProps, FormState> {
           </label>
           <div className="button-container">
             <input type="submit" value="➕ Add Provider" />
-            <input type="button" value="Reset" onClick={this.resetForm} />
+            <input className="reset-button" type="button" value="Reset" onClick={this.resetForm} />
           </div>
         </form>
       </div>

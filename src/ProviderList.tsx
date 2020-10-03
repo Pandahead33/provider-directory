@@ -19,7 +19,7 @@ interface ProviderListState {
   searchResults: Array<Contact>;
   /* eslint-disable */
   // to access fields by using [fieldName], this needs to accept
-  // any type, which eslint will always warn about
+  // any type- which eslint intentionally warns about
   [key: string]: any;
   /* eslint-enable */
 }
@@ -38,6 +38,7 @@ class ProviderList extends React.Component<
       showSearchResults: false,
     };
 
+
     this.changeSortByFieldDropdown = this.changeSortByFieldDropdown.bind(this);
     this.updateSearchTerm = this.updateSearchTerm.bind(this);
     this.searchProviderList = this.searchProviderList.bind(this);
@@ -50,6 +51,8 @@ class ProviderList extends React.Component<
       target.value === "ascending"
         ? SortDirection.ascending
         : SortDirection.descending;
+
+    console.log(sortDirection);
 
     this.setState(
       {
@@ -101,16 +104,21 @@ class ProviderList extends React.Component<
     this.setState({
       searchResults: searchResults,
       showSearchResults: !!this.state.searchTerm,
-    });
-    console.log(searchResults);
+    }, this.sortByField);
+  
   }
 
   sortByField(): void {
     const fieldName = this.state.sortBy;
-    const providerContacts = this.props.contacts;
+    const providerContacts = this.state.showSearchResults
+    ? this.state.searchResults
+    : this.props.contacts;
     const ascendingOrder = this.state.sortDirection === SortDirection.ascending;
 
+    console.log("sortByField");
     providerContacts.sort((a, b) => {
+      console.log(a[fieldName]);
+      console.log(b[fieldName]);
       if (a[fieldName] < b[fieldName]) {
         return ascendingOrder ? -1 : 1;
       } else if (a[fieldName] > b[fieldName]) {
@@ -126,6 +134,8 @@ class ProviderList extends React.Component<
     const data = this.state.showSearchResults
       ? this.state.searchResults
       : this.props.contacts;
+
+    this.sortByField();
 
     data.forEach((record) => {
       const recordValues = Object.values(record);
