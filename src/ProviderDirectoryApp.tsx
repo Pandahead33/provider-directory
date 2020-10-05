@@ -3,7 +3,6 @@ import ContactForm from "./ContactForm";
 import ProviderList from "./ProviderList";
 import { Contact } from "./Contact";
 import Action from "./Action";
-import { type } from "os";
 
 interface History {
   index: number;
@@ -60,6 +59,10 @@ class ProviderDirectoryApp extends React.Component<
     this.resetHistory = this.resetHistory.bind(this);
   }
 
+  scrollToTop(): void {
+    window.scrollTo(0, 0);
+  }
+
   componentDidMount(): void {
     const savedHistory = localStorage.getItem("history");
     const savedStepNumber = localStorage.getItem("stepNumber");
@@ -69,12 +72,17 @@ class ProviderDirectoryApp extends React.Component<
         stepNumber: Number(savedStepNumber),
       });
     }
+
+    localStorage.clear();
   }
 
   addRow(record: Contact): void {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const contacts = [...history[history.length - 1].contacts];
     const nextStep = this.state.stepNumber + 1;
+
+    console.log({ nextStep, contacts });
+    console.log("adding");
 
     contacts.push({
       id: record.id,
@@ -86,7 +94,7 @@ class ProviderDirectoryApp extends React.Component<
     });
 
     history.push({
-      index: history.length - 1,
+      index: contacts.length - 1,
       action: Action.add,
       contacts: contacts,
       deletedRecord: undefined,
@@ -120,7 +128,7 @@ class ProviderDirectoryApp extends React.Component<
       this.setState(
         {
           history: history.concat({
-            index: nextStep,
+            index: -1,
             action: Action.delete,
             contacts: contacts,
             deletedRecord: deletedContact,
@@ -155,7 +163,7 @@ class ProviderDirectoryApp extends React.Component<
     };
 
     history.push({
-      index: nextStep,
+      index: -1,
       action: Action.edit,
       contacts: contacts,
       deletedRecord: oldContact,
@@ -196,9 +204,9 @@ class ProviderDirectoryApp extends React.Component<
     );
   }
 
-  
   resetHistory(): void {
-    const confirmationMessage = "Delete all providers and history? This can't be undone.";
+    const confirmationMessage =
+      "Delete all providers and history? This can't be undone.";
     if (window.confirm(confirmationMessage)) {
       this.setState(
         {
@@ -224,13 +232,13 @@ class ProviderDirectoryApp extends React.Component<
 
     this.setState({
       showActionSuccessMessage: true,
-    })
+    });
 
     setTimeout(() => {
       this.setState({
         showActionSuccessMessage: false,
-      })
-    }, messageDurationInMilliseconds)
+      });
+    }, messageDurationInMilliseconds);
   }
 
   generateActionHistoryList(
@@ -242,7 +250,9 @@ class ProviderDirectoryApp extends React.Component<
           ? "Added"
           : historyOperation.action === Action.edit
           ? "Edited"
-          : historyOperation.action === Action.delete ? "Deleted" : "Reset";
+          : historyOperation.action === Action.delete
+          ? "Deleted"
+          : "Reset";
       const contact =
         historyOperation.contacts[historyOperation.index] ||
         historyOperation.deletedRecord;
@@ -278,7 +288,7 @@ class ProviderDirectoryApp extends React.Component<
       }
 
       return (
-        <li key={historyOperation.index}>
+        <li key={contact.id + historyOperation.index + this.state.stepNumber}>
           <span>
             {actionMessage}{" "}
             <a href={emailAddress}>
@@ -295,11 +305,14 @@ class ProviderDirectoryApp extends React.Component<
   }
 
   openFormPanel(actionType: Action, record: Contact | null): void {
-    this.setState({
-      providerFormAction: actionType,
-      editRecord: record,
-      showContactForm: true,
-    });
+    this.setState(
+      {
+        providerFormAction: actionType,
+        editRecord: record,
+        showContactForm: true,
+      },
+      this.scrollToTop
+    );
   }
 
   closeFormPanel(): void {
@@ -318,14 +331,24 @@ class ProviderDirectoryApp extends React.Component<
 
     return (
       <main>
-        {this.state.showContactForm ? 
-        <ContactForm
-          type={action}
-          actOnProvider={action === Action.add ? this.addRow : this.editRow}
-          initialData={this.state.editRecord || undefined}
-          closeForm={this.closeFormPanel}
-        /> : null}
-        {this.state.showActionSuccessMessage ? <div className="success-message">Contact successfully {(current.action === Action.add.toString()) ? "added!" : (current.action === Action.edit.toString()) ? "edited!" : "deleted!"}</div> : null}
+        {this.state.showContactForm ? (
+          <ContactForm
+            type={action}
+            actOnProvider={action === Action.add ? this.addRow : this.editRow}
+            initialData={this.state.editRecord || undefined}
+            closeForm={this.closeFormPanel}
+          />
+        ) : null}
+        {this.state.showActionSuccessMessage ? (
+          <div className="success-message">
+            Contact successfully{" "}
+            {current.action === Action.add.toString()
+              ? "added!"
+              : current.action === Action.edit.toString()
+              ? "edited!"
+              : "deleted!"}
+          </div>
+        ) : null}
         <ProviderList
           contacts={current.contacts || []}
           deleteProvider={this.deleteRow}

@@ -12,14 +12,12 @@ interface ProviderListProps {
   contacts: Array<Contact>;
   deleteProvider: (id: string) => void;
   openFormPanel: (actionType: Action, record: Contact | null) => void;
-  resetProviderList: () => void; 
+  resetProviderList: () => void;
 }
 
 interface ProviderListState {
   sortBy: string;
   sortDirection: SortDirection;
-  showSearchResults: boolean;
-  searchResults: Array<Contact>;
   /* eslint-disable */
   // to access fields by using [fieldName], this needs to accept
   // any type- which eslint intentionally warns about
@@ -37,8 +35,6 @@ class ProviderList extends React.Component<
       sortBy: "lastName",
       sortDirection: SortDirection.ascending,
       searchTerm: "",
-      searchResults: [],
-      showSearchResults: false,
     };
 
     this.changeSortByFieldDropdown = this.changeSortByFieldDropdown.bind(this);
@@ -54,23 +50,17 @@ class ProviderList extends React.Component<
         ? SortDirection.ascending
         : SortDirection.descending;
 
-    this.setState(
-      {
-        sortDirection: sortDirection,
-      },
-      this.sortByField
-    );
+    this.setState({
+      sortDirection: sortDirection,
+    });
   }
 
   changeSortByFieldDropdown(event: React.SyntheticEvent): void {
     const target = event.target as HTMLInputElement;
 
-    this.setState(
-      {
-        sortBy: target.value,
-      },
-      this.sortByField
-    );
+    this.setState({
+      sortBy: target.value,
+    });
   }
 
   updateSearchTerm(event: React.SyntheticEvent): void {
@@ -80,8 +70,8 @@ class ProviderList extends React.Component<
     });
   }
 
-  searchProviderList(): void {
-    let searchResults = [...this.props.contacts];
+  searchProviderList(contacts: Array<Contact>): Array<Contact> {
+    let searchResults = [...contacts];
     const fitsSearchCriteria = (contact: Contact) =>
       Object.values(contact).reduce(
         (boolean: boolean, field) =>
@@ -100,23 +90,16 @@ class ProviderList extends React.Component<
       []
     );
 
-    this.setState(
-      {
-        searchResults: searchResults,
-        showSearchResults: !!this.state.searchTerm,
-      },
-      this.sortByField
-    );
+    return searchResults;
   }
 
-  sortByField(): void {
+  sortByField(contacts: Array<Contact>): Array<Contact> {
     const fieldName = this.state.sortBy;
-    const providerContacts = this.state.showSearchResults
-      ? this.state.searchResults
-      : this.props.contacts;
+    const providerContacts = [...contacts];
+
     const ascendingOrder = this.state.sortDirection === SortDirection.ascending;
 
-    providerContacts.sort((a, b) => {
+    providerContacts.sort((a: Contact, b: Contact) => {
       if (a[fieldName] < b[fieldName]) {
         return ascendingOrder ? -1 : 1;
       } else if (a[fieldName] > b[fieldName]) {
@@ -125,15 +108,19 @@ class ProviderList extends React.Component<
 
       return 0;
     });
+
+    return providerContacts;
+  }
+
+  doProviderSearch(): void {
+    this.setState({
+      showSearchResults: true,
+    });
   }
 
   render(): ReactElement {
     const cells: Array<ReactElement> = [];
-    const data = this.state.showSearchResults
-      ? this.state.searchResults
-      : this.props.contacts;
-
-    this.sortByField();
+    const data = this.sortByField(this.searchProviderList(this.props.contacts));
 
     data.forEach((record) => {
       const recordValues = Object.values(record);
@@ -226,18 +213,14 @@ class ProviderList extends React.Component<
           <div className="search-bar-container">
             <input
               className="search"
+              placeholder="Search..."
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
-                  this.searchProviderList();
+                  this.doProviderSearch();
                 }
               }}
               onChange={this.updateSearchTerm}
               type="search"
-            />
-            <input
-              type="button"
-              value="Search"
-              onClick={this.searchProviderList}
             />
             <label htmlFor="sortBy">
               <div className="sort-by-label">Sort By</div>

@@ -64,7 +64,7 @@ exports[`render and matches snapshot 1`] = `
         id="emailAddress"
         name="emailAddress"
         onChange={[Function]}
-        placeholder="test@email.com"
+        placeholder="you@email.com"
         required={true}
         size={55}
         type="email"
@@ -151,6 +151,11 @@ exports[`render and matches snapshot 1`] = `
       <input
         className="reset-button"
         onClick={[Function]}
+        type="button"
+        value="Reset"
+      />
+      <input
+        className="cancel-button"
         type="button"
         value="Cancel"
       />

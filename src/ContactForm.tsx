@@ -20,11 +20,11 @@ export default function ContactForm(props: FormProps): ReactElement {
   const [errorMessages, setErrorMessages] = useState(new Map());
 
   useEffect(() => {
-    firstName.set(props.initialData?.firstName);
-    lastName.set(props.initialData?.lastName);
-    emailAddress.set(props.initialData?.emailAddress);
-    speciality.set(props.initialData?.speciality);
-    practiceName.set(props.initialData?.practiceName);
+    firstName.set(props.initialData?.firstName || '');
+    lastName.set(props.initialData?.lastName || '');
+    emailAddress.set(props.initialData?.emailAddress || '');
+    speciality.set(props.initialData?.speciality || 'N/A');
+    practiceName.set(props.initialData?.practiceName || '');
   }, [props.initialData]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
@@ -116,7 +116,7 @@ export default function ContactForm(props: FormProps): ReactElement {
             type="text"
             id="firstName"
             name="firstName"
-            value={firstName.value}
+            value={firstName.value || ""}
             onChange={(event) =>
               firstName.onChange(event, errorMessages, setErrorMessages)
             }
@@ -130,7 +130,7 @@ export default function ContactForm(props: FormProps): ReactElement {
             type="text"
             id="lastName"
             name="lastName"
-            value={lastName.value}
+            value={lastName.value || ""}
             onChange={(event) =>
               lastName.onChange(event, errorMessages, setErrorMessages)
             }
@@ -144,11 +144,11 @@ export default function ContactForm(props: FormProps): ReactElement {
             type="email"
             id="emailAddress"
             name="emailAddress"
-            value={emailAddress.value}
+            value={emailAddress.value || ""}
             onChange={(event) =>
               emailAddress.onChange(event, errorMessages, setErrorMessages)
             }
-            placeholder="test@email.com"
+            placeholder="you@email.com"
             size={55}
             required
           />
@@ -158,7 +158,7 @@ export default function ContactForm(props: FormProps): ReactElement {
           <select
             id="speciality"
             name="speciality"
-            value={speciality.value}
+            value={speciality.value || ""}
             onChange={(event) =>
               speciality.onChange(event, new Map(), setErrorMessages)
             }
@@ -179,7 +179,7 @@ export default function ContactForm(props: FormProps): ReactElement {
             type="text"
             id="practiceName"
             name="practiceName"
-            value={practiceName.value}
+            value={practiceName.value || ""}
             onChange={(event) => {
               practiceName.onChange(event, new Map(), setErrorMessages);
             }}
@@ -200,10 +200,10 @@ export default function ContactForm(props: FormProps): ReactElement {
             value="Reset"
             onClick={resetForm}
           />
-          <input 
+          <input
             className="cancel-button"
             type="button"
-            value = "Cancel"
+            value="Cancel"
             onClick={props.closeForm}
           />
         </div>
@@ -212,7 +212,7 @@ export default function ContactForm(props: FormProps): ReactElement {
   );
 }
 
-function useFormInput(initialValue: any) {
+function useFormInput(initialValue: string) {
   const [value, setValue] = useState(initialValue);
 
   function handleChange(

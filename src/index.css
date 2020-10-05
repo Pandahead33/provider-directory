@@ -9,6 +9,7 @@
 
 html {
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 *,
@@ -19,6 +20,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: hidden;
 }
 
 main {
@@ -30,7 +32,7 @@ main {
   max-height: 100vh;
   min-height: 100vh;
   grid-template-areas:
-    ". messages messages"
+    "messages messages messages"
     "form search search"
     "form actionHistory actionHistory";
   grid-template-columns: minmax(min-content, auto) 3fr;
@@ -208,7 +210,8 @@ input[type="radio"] {
   grid-template-columns: 10% 10% 31% 14% 20% 15%;
   overflow-y: scroll;
   overflow-x: unset;
-  max-height: 44.5vh;
+  min-height: 130px;
+  max-height: 340px;
 }
 
 .provider-list .search-results-container > .cell {
@@ -303,12 +306,12 @@ input.add-new-provider-button:nth-child(3) {
 @media (max-width: 1226px) {
   main {
     grid-template-areas:
-    "messages"
-    "form"
-    "search"
-    "actionHistory";
+      "messages"
+      "form"
+      "search"
+      "actionHistory";
     grid-template-columns: 0.985fr;
-    grid-template-rows: minmax(min-content, auto) minmax(min-content, auto) minmax(730px, 1fr) 250px;
+    grid-template-rows: minmax(min-content, auto) minmax(min-content, auto) 640px 250px;
     column-gap: 10px;
     row-gap: 10px;
   }
@@ -353,7 +356,6 @@ input.add-new-provider-button:nth-child(3) {
 
   main > div {
     border: 0;
-    padding: 0;
   }
 
   form {
@@ -408,12 +410,12 @@ input.add-new-provider-button:nth-child(3) {
 
   main > .provider-list {
     grid-area: search;
-    height: 100%;
-    min-height: 900px;
+    min-height: 850px;
   }
 
   .provider-list .search-results-container {
     min-height: 510px;
+    max-height: 510px;
   }
 
   .provider-list .action-button:nth-child(1) {
