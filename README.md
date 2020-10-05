@@ -6,7 +6,7 @@ Provider Contact Directory is a React app programmed in Typescript for managing 
 - Ability to add, edit, remove a contact.
 - Sort and filter by any field
 - Search (basic keyword on any field)
-- Action History tracking operations that can be rewinded/fast forward
+- Rewind/fast forward operations with Action History
 
 ## Extras 
 - Written in Typescript 
@@ -21,8 +21,8 @@ Provider Contact Directory is a React app programmed in Typescript for managing 
 
 The first step is to get everything running!
 
-### Prerequistes
-The prerequistes to install the app are node/npm and git.
+### Prerequisites
+The prerequisites to install the app are node/npm and git.
 
 If you don't have node installed, the versions used were:
 
@@ -71,7 +71,7 @@ The project includes tests that are run by typing in:
 npm test
 ```
 
-It uses both snapshost testing and [testing-library](https://testing-library.com/) to replicate tests similar to how users actually interact with the app.
+It uses both snapshot testing and [testing-library](https://testing-library.com/) to replicate tests similar to how users actually interact with the app.
 
 ## Project Structure
 
