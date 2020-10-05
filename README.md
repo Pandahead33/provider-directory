@@ -3,19 +3,17 @@
 Provider Contact Directory is a React app programmed in Typescript for managing medical provider contacts. The project was initialized with [Create React App](https://create-react-app.dev/).
 
 ## Table of Contents
-- [Provider Contact Directory](#provider-contact-directory)
-  * [Table of Contents](#table-of-contents)
-  * [Included Features](#included-features)
-  * [Extras](#extras)
-  * [Installation](#installation)
-    + [Prerequisites](#prerequisites)
-    + [Cloning the Repository](#cloning-the-repository)
-    + [Project Setup](#project-setup)
-      - [Testing](#testing)
-  * [Project Structure](#project-structure)
-  * [Future Additions](#future-additions)
-  * [Building a Production Release](#building-a-production-release)
-  * [Contributing](#contributing)
+- [Included Features](#included-features)
+- [Extras](#extras)
+- [Installation](#installation)
+  * [Prerequisites](#prerequisites)
+  * [Cloning the Repository](#cloning-the-repository)
+  * [Project Setup](#project-setup)
+    + [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Future Additions](#future-additions)
+- [Building a Production Release](#building-a-production-release)
+- [Contributing](#contributing)
 
 ## Included Features
 - Ability to add, edit, remove a contact.
@@ -37,37 +35,41 @@ Provider Contact Directory is a React app programmed in Typescript for managing 
 The first step is to get everything running!
 
 ### Prerequisites
-The prerequisites to install the app are node/npm and git.
+Install node/npm and git.
 
-If you don't have node installed, the versions used were:
+The node/npm versions used were:
 
 ```
 node v12.18.2
 npm 6.14.5
 ```
 
-[GIT installation](https://git-scm.com/downloads)
-[Node/NPM installation](https://nodejs.org/en/)
+- [GIT installation](https://git-scm.com/downloads)
+- [Node/NPM installation](https://nodejs.org/en/)
 
 ### Cloning the Repository
 After installing the prerequisites, open a terminal or command prompt.
 
-Let's clone the repository to get the code on your local machine!
+Clone the repository to get the code locally.
 
-Run the command:
 ```
 git clone https://github.com/Pandahead33/provider-directory.git
 ```
 
+This will create a new directory called provider-directory. Navigate into it.
+
+```
+cd provider-directory
+```
+
 ### Project Setup
-Next install other dependencies will by running:
+Next install other dependencies by running:
 
 ```
 npm install
 ``` 
 
-
-You only need to run this on first install or if you change dependencies later.
+This only needs to run on first install or if dependencies change later.
 
 After that run,
 
@@ -97,20 +99,20 @@ ProviderDirectoryApp holds the main layout which consists of three major compone
 1. Contact Form
 	- This form handles Adding/Editing.
 2. Provider List 
-	- This is the meat of the application. Here you can view provider contacts, search, sort, and edit or delete. 
+	- This is the meat of the application. View provider contacts, search, sort, and edit or delete. 
 	- Hitting edit will open the Contact Form with the relevant data.
 3. Action History
-	- Every change is documented up to the current point. You can rewind or fast forward. Delete a contact you didn't want to? No problem! Simply rewind the action. Have you added ten different people and realized none were of the medical persuasion? Again, not an issue. 
+	- Every change is documented up to the current point. Rewind or fast forward actions. Delete a contact accidentally? No problem! Simply rewind the action. Add ten different people and realized none were of the medical persuasion? Again, not an issue. Scroll down to before it happened and rewind.
 	- "Current History" represents what is being viewed in the table.
-	- "Fast forward" let's you go to a future action
-	- "Rewind" takes you further into the past.
-	- If you do another operation, it will delete all "future" states. You can no longer fast forward and those states are lost forever. 
+	- "Fast forward" goes to a future action
+	- "Rewind" goes further into the past.
+	- Actions happen on current history. If the Current History is not the most recent event, it will delete all "future" states. You can no longer fast forward and those states are lost forever. History before the "Current History" is retained.
 
 ## Future Additions
 
 This is a relatively happy path application. 
 
-If I spent more time I'd likely:
+Possible future enhancements:
 
 - Switch all classes to React Hooks
 - Extensive error handling/messages
@@ -134,7 +136,7 @@ Your app is ready to be deployed!
 Learn more about [deployment](https://facebook.github.io/create-react-app/docs/deployment).
 
 ## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, please open an issue first to discuss the change.
 
 The project includes [prettier](https://prettier.io/) and [eslint](https://eslint.org/docs/rules/). 
 
