@@ -2,6 +2,21 @@
 
 Provider Contact Directory is a React app programmed in Typescript for managing medical provider contacts. The project was initialized with [Create React App](https://create-react-app.dev/).
 
+## Table of Contents
+- [Provider Contact Directory](#provider-contact-directory)
+  * [Table of Contents](#table-of-contents)
+  * [Included Features](#included-features)
+  * [Extras](#extras)
+  * [Installation](#installation)
+    + [Prerequisites](#prerequisites)
+    + [Cloning the Repository](#cloning-the-repository)
+    + [Project Setup](#project-setup)
+      - [Testing](#testing)
+  * [Project Structure](#project-structure)
+  * [Future Additions](#future-additions)
+  * [Building a Production Release](#building-a-production-release)
+  * [Contributing](#contributing)
+
 ## Included Features
 - Ability to add, edit, remove a contact.
 - Sort and filter by any field
