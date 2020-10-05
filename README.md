@@ -32,8 +32,6 @@ Provider Contact Directory is a React app programmed in Typescript for managing 
 
 ## Installation
 
-The first step is to get everything running!
-
 ### Prerequisites
 Install node/npm and git.
 
