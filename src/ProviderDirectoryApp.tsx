@@ -1,7 +1,9 @@
 import React, { ReactElement } from "react";
-import AddContactForm from "./AddContactForm";
+import ContactForm from "./ContactForm";
 import ProviderList from "./ProviderList";
 import { Contact } from "./Contact";
+import Action from "./Action";
+import { type } from "os";
 
 interface History {
   index: number;
@@ -10,14 +12,13 @@ interface History {
   deletedRecord: Contact | null | undefined;
 }
 
-enum Action {
-  add = "add",
-  delete = "delete",
-}
-
 interface ProviderDirectoryAppState {
   history: Array<History>;
   stepNumber: number;
+  providerFormAction: Action;
+  editRecord: Contact | null | undefined;
+  showContactForm: boolean;
+  showActionSuccessMessage: boolean;
 }
 
 class ProviderDirectoryApp extends React.Component<
@@ -34,6 +35,7 @@ class ProviderDirectoryApp extends React.Component<
           deletedRecord: undefined,
           contacts: [
             {
+              id: "1",
               firstName: "Bob",
               lastName: "Smith",
               emailAddress: "bob@smith.com",
@@ -44,10 +46,18 @@ class ProviderDirectoryApp extends React.Component<
         },
       ],
       stepNumber: 0,
+      providerFormAction: Action.add,
+      editRecord: null,
+      showContactForm: window.innerWidth > 1226,
+      showActionSuccessMessage: false,
     };
 
     this.addRow = this.addRow.bind(this);
+    this.editRow = this.editRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
+    this.openFormPanel = this.openFormPanel.bind(this);
+    this.closeFormPanel = this.closeFormPanel.bind(this);
+    this.resetHistory = this.resetHistory.bind(this);
   }
 
   componentDidMount(): void {
@@ -67,6 +77,7 @@ class ProviderDirectoryApp extends React.Component<
     const nextStep = this.state.stepNumber + 1;
 
     contacts.push({
+      id: record.id,
       firstName: record.firstName,
       lastName: record.lastName,
       emailAddress: record.emailAddress,
@@ -75,7 +86,7 @@ class ProviderDirectoryApp extends React.Component<
     });
 
     history.push({
-      index: nextStep,
+      index: history.length - 1,
       action: Action.add,
       contacts: contacts,
       deletedRecord: undefined,
@@ -86,31 +97,89 @@ class ProviderDirectoryApp extends React.Component<
         history: history,
         stepNumber: nextStep,
       },
-      this.updateLocalStorage
+      () => {
+        this.updateLocalStorage();
+        this.closeFormPanel();
+        this.displayActionSuccessMessage();
+      }
     );
   }
 
-  deleteRow(record: Contact): void {
+  deleteRow(id: string): void {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const contacts = [...history[history.length - 1].contacts];
     const nextStep = this.state.stepNumber + 1;
 
-    if (contacts.includes(record)) {
-      contacts.splice(contacts.indexOf(record), 1);
+    const relevantRecordIndex = contacts.findIndex(
+      (element) => element.id === id
+    );
+    const deletedContact = Object.assign({}, contacts[relevantRecordIndex]);
+    contacts.splice(relevantRecordIndex, 1);
 
+    if (deletedContact) {
       this.setState(
         {
           history: history.concat({
             index: nextStep,
             action: Action.delete,
             contacts: contacts,
-            deletedRecord: record,
+            deletedRecord: deletedContact,
           }),
           stepNumber: nextStep,
         },
-        this.updateLocalStorage
+        () => {
+          this.updateLocalStorage();
+          this.displayActionSuccessMessage();
+        }
       );
     }
+  }
+
+  editRow(record: Contact): void {
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const contacts = [...history[history.length - 1].contacts];
+    const nextStep = this.state.stepNumber + 1;
+
+    const relevantRecordIndex = contacts.findIndex(
+      (element) => element.id === record.id
+    );
+    const oldContact = Object.assign({}, contacts[relevantRecordIndex]);
+
+    contacts[relevantRecordIndex] = {
+      id: contacts[relevantRecordIndex].id,
+      firstName: record.firstName,
+      lastName: record.lastName,
+      emailAddress: record.emailAddress,
+      speciality: record.speciality || "",
+      practiceName: record.practiceName || "",
+    };
+
+    history.push({
+      index: nextStep,
+      action: Action.edit,
+      contacts: contacts,
+      deletedRecord: oldContact,
+    });
+
+    this.setState(
+      {
+        history: history,
+        stepNumber: nextStep,
+        providerFormAction: Action.add,
+        editRecord: null,
+      },
+      () => {
+        this.updateLocalStorage();
+        this.closeFormPanel();
+        this.displayActionSuccessMessage();
+      }
+    );
+  }
+
+  cancelEdit(): void {
+    this.setState({
+      providerFormAction: Action.add,
+    });
   }
 
   updateLocalStorage(): void {
@@ -127,14 +196,41 @@ class ProviderDirectoryApp extends React.Component<
     );
   }
 
+  
   resetHistory(): void {
-    this.setState(
-      {
-        history: [],
-        stepNumber: 0,
-      },
-      this.updateLocalStorage
-    );
+    const confirmationMessage = "Delete all providers and history? This can't be undone.";
+    if (window.confirm(confirmationMessage)) {
+      this.setState(
+        {
+          history: [
+            {
+              index: 0,
+              action: Action.reset,
+              deletedRecord: undefined,
+              contacts: [],
+            },
+          ],
+          stepNumber: 0,
+          providerFormAction: Action.add,
+          editRecord: null,
+        },
+        this.updateLocalStorage
+      );
+    }
+  }
+
+  displayActionSuccessMessage(): void {
+    const messageDurationInMilliseconds = 2000;
+
+    this.setState({
+      showActionSuccessMessage: true,
+    })
+
+    setTimeout(() => {
+      this.setState({
+        showActionSuccessMessage: false,
+      })
+    }, messageDurationInMilliseconds)
   }
 
   generateActionHistoryList(
@@ -142,7 +238,11 @@ class ProviderDirectoryApp extends React.Component<
   ): Array<JSX.Element | undefined> {
     const historyList = history.map((historyOperation) => {
       const actionMessage =
-        historyOperation.action === Action.add ? "Added" : "Deleted";
+        historyOperation.action === Action.add
+          ? "Added"
+          : historyOperation.action === Action.edit
+          ? "Edited"
+          : historyOperation.action === Action.delete ? "Deleted" : "Reset";
       const contact =
         historyOperation.contacts[historyOperation.index] ||
         historyOperation.deletedRecord;
@@ -194,27 +294,48 @@ class ProviderDirectoryApp extends React.Component<
     return historyList.reverse();
   }
 
-  generateActionForm(): ReactElement {
-    return <AddContactForm addNewProvider={this.addRow} />;
+  openFormPanel(actionType: Action, record: Contact | null): void {
+    this.setState({
+      providerFormAction: actionType,
+      editRecord: record,
+      showContactForm: true,
+    });
+  }
+
+  closeFormPanel(): void {
+    this.setState({
+      providerFormAction: Action.add,
+      editRecord: null,
+      showContactForm: false,
+    });
   }
 
   render(): ReactElement {
     const history: Array<History> = [...this.state.history];
     const current = history[this.state.stepNumber];
     const historyList = this.generateActionHistoryList(history);
-    const actionForm = this.generateActionForm();
+    const action = this.state.providerFormAction;
 
     return (
       <main>
+        {this.state.showContactForm ? 
+        <ContactForm
+          type={action}
+          actOnProvider={action === Action.add ? this.addRow : this.editRow}
+          initialData={this.state.editRecord || undefined}
+          closeForm={this.closeFormPanel}
+        /> : null}
+        {this.state.showActionSuccessMessage ? <div className="success-message">Contact successfully {(current.action === Action.add.toString()) ? "added!" : (current.action === Action.edit.toString()) ? "edited!" : "deleted!"}</div> : null}
         <ProviderList
-          contacts={current.contacts}
+          contacts={current.contacts || []}
           deleteProvider={this.deleteRow}
+          openFormPanel={this.openFormPanel}
+          resetProviderList={this.resetHistory}
         />
         <div className="action-history">
           <h1>Action History</h1>
           <ol>{historyList}</ol>
         </div>
-        {actionForm}
       </main>
     );
   }

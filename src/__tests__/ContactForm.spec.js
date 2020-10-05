@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import ReactDOM from 'react-dom';
 import { create, ReactTestRenderer, ReactTestRendererJSON } from "react-test-renderer";
-import AddContactForm from "../AddContactForm";
+import AddContactForm from "../ContactForm";
 import Fields from "../Fields";
 
 let container; 
@@ -75,7 +75,7 @@ test.each`
 });
 
 test.each`
-    scenario                 | field                   | invalidValue           | fixedValue
+    scenario                        | field                   | invalidValue           | fixedValue
     ${"remove invalid email"}       | ${Fields.EMAIL_ADDRESS} | ${"igetspammed1234"}   | ${"igetspammed1234@gmail.com"}
     ${"remove first name has #"}    | ${Fields.FIRST_NAME}    | ${"0"}                 | ${"Bob"}
     ${"remove last name has #"}     | ${Fields.LAST_NAME}     | ${"1"}                 | ${"Smith"}

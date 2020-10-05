@@ -30,10 +30,11 @@ main {
   max-height: 100vh;
   min-height: 100vh;
   grid-template-areas:
+    ". messages messages"
     "form search search"
     "form actionHistory actionHistory";
-  grid-template-columns: 1fr 3fr;
-  grid-template-rows: 1fr 250px;
+  grid-template-columns: minmax(min-content, auto) 3fr;
+  grid-template-rows: minmax(min-content, auto) 1fr 250px;
   column-gap: 10px;
   row-gap: 10px;
   padding: 10px;
@@ -191,8 +192,13 @@ input[type="radio"] {
   vertical-align: super;
 }
 
+.provider-list .results {
+  display: inline-block;
+  margin-top: 5px;
+}
+
 .provider-list .provider-table-heading {
-  margin-top: 30px;
+  margin-top: 10px;
   display: grid;
   grid-template-columns: 10% 10% 30% 14% 20% 16%;
 }
@@ -281,24 +287,30 @@ input[type="radio"] {
   margin: 0 0 10px 0;
 }
 
+.success-message {
+  grid-area: messages;
+  border-color: #c3e6cb;
+  background-color: #d4edda;
+  color: #155724;
+  padding: 10px;
+}
+
+input.add-new-provider-button:nth-child(3) {
+  margin-left: 10px;
+  margin-bottom: 40px;
+}
+
 @media (max-width: 1226px) {
   main {
-    display: grid;
-    width: 100vw;
-    height: auto;
-    max-height: unset;
     grid-template-areas:
-      "form"
-      "search"
-      "actionHistory";
-    grid-template-columns: 1fr;
-    grid-template-rows: 0 2fr 1fr;
+    "messages"
+    "form"
+    "search"
+    "actionHistory";
+    grid-template-columns: 0.985fr;
+    grid-template-rows: minmax(min-content, auto) minmax(min-content, auto) minmax(730px, 1fr) 250px;
     column-gap: 10px;
     row-gap: 10px;
-  }
-
-  main > .form {
-    display: none;
   }
 
   .provider-list .search-results-container > .cell {
@@ -310,33 +322,38 @@ input[type="radio"] {
     background-color: hsl(0, 0%, 29%);
   }
 
+  .provider-list {
+    min-height: 730px;
+  }
+
+  .action-history {
+    min-height: min-content;
+  }
+
   main > .form {
     padding-bottom: 30px;
+  }
+
+  input.add-new-provider-button:nth-child(3) {
+    margin-left: 10px;
+    margin-top: -10px;
   }
 }
 
 @media (max-width: 768px) {
   main {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     width: 100vw;
     height: auto;
-    grid-template-areas:
-      "form"
-      "search"
-      "actionHistory";
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    column-gap: 10px;
-    row-gap: 10px;
-  }
-
-  main > .action-history {
-    display: none;
+    min-height: 100vh;
+    max-height: unset;
+    padding: 5px 25px 0 10px;
   }
 
   main > div {
-    margin-right: 35px;
     border: 0;
+    padding: 0;
   }
 
   form {
@@ -386,11 +403,17 @@ input[type="radio"] {
     display: grid;
     grid-template-columns: 1fr;
     overflow: visible;
+    overflow-y: scroll;
   }
 
   main > .provider-list {
     grid-area: search;
-    overflow: visible;
+    height: 100%;
+    min-height: 900px;
+  }
+
+  .provider-list .search-results-container {
+    min-height: 510px;
   }
 
   .provider-list .action-button:nth-child(1) {
@@ -406,5 +429,17 @@ input[type="radio"] {
     margin-bottom: 20px;
     margin-right: 10px;
     margin: 10px;
+  }
+
+  input.add-new-provider-button {
+    display: block;
+    margin-bottom: 20px;
+    margin-top: -10px;
+    width: 100%;
+  }
+
+  input.add-new-provider-button:nth-child(3) {
+    margin-bottom: 50px;
+    margin-left: 0;
   }
 }

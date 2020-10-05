@@ -1,0 +1,160 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render and matches snapshot 1`] = `
+<div
+  className="form"
+>
+  <h1>
+    Edit Provider
+  </h1>
+  <div
+    className="error-messages"
+  >
+    <ul />
+  </div>
+  <form
+    noValidate={true}
+    onSubmit={[Function]}
+  >
+    <label
+      htmlFor="firstName"
+    >
+      <div
+        className="required-field"
+      >
+        First Name
+      </div>
+      <input
+        id="firstName"
+        name="firstName"
+        onChange={[Function]}
+        placeholder="Bob"
+        required={true}
+        type="text"
+        value=""
+      />
+    </label>
+    <label
+      htmlFor="lastName"
+    >
+      <div
+        className="required-field"
+      >
+        Last Name
+      </div>
+      <input
+        id="lastName"
+        name="lastName"
+        onChange={[Function]}
+        placeholder="Smith"
+        required={true}
+        type="text"
+        value=""
+      />
+    </label>
+    <label
+      htmlFor="emailAddress"
+    >
+      <div
+        className="required-field"
+      >
+        Email Address
+      </div>
+      <input
+        id="emailAddress"
+        name="emailAddress"
+        onChange={[Function]}
+        placeholder="test@email.com"
+        required={true}
+        size={55}
+        type="email"
+        value=""
+      />
+    </label>
+    <label
+      htmlFor="speciality"
+    >
+      <div>
+        Speciality
+      </div>
+      <select
+        id="speciality"
+        name="speciality"
+        onChange={[Function]}
+        value="N/A"
+      >
+        <option
+          value="N/A"
+        >
+          N/A
+        </option>
+        <option
+          value="General Medicine"
+        >
+          General Medicine
+        </option>
+        <option
+          value="Orthopedics"
+        >
+          Orthopedics
+        </option>
+        <option
+          value="Pediatrics"
+        >
+          Pediatrics
+        </option>
+        <option
+          value="Podiatry"
+        >
+          Podiatry
+        </option>
+        <option
+          value="Surgery"
+        >
+          Surgery
+        </option>
+        <option
+          value="Somnologist"
+        >
+          Somnologist
+        </option>
+        <option
+          value="Other"
+        >
+          Other
+        </option>
+      </select>
+    </label>
+    <label
+      htmlFor="practiceName"
+    >
+      <div>
+        Practice Name
+      </div>
+      <input
+        id="practiceName"
+        name="practiceName"
+        onChange={[Function]}
+        placeholder="Memorial Family Practice"
+        size={55}
+        type="text"
+        value=""
+      />
+    </label>
+    <div
+      className="button-container"
+    >
+      <input
+        type="submit"
+        value="Edit Provider"
+      />
+      <input
+        className="reset-button"
+        onClick={[Function]}
+        type="button"
+        value="Cancel"
+      />
+    </div>
+  </form>
+</div>
+`;

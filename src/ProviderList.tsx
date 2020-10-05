@@ -1,5 +1,7 @@
 import React, { ReactElement } from "react";
 import { Contact } from "./Contact";
+import Fields from "./Fields";
+import Action from "./Action";
 
 enum SortDirection {
   ascending = "ascending",
@@ -8,13 +10,14 @@ enum SortDirection {
 
 interface ProviderListProps {
   contacts: Array<Contact>;
-  deleteProvider: (record: Contact) => void;
+  deleteProvider: (id: string) => void;
+  openFormPanel: (actionType: Action, record: Contact | null) => void;
+  resetProviderList: () => void; 
 }
 
 interface ProviderListState {
   sortBy: string;
   sortDirection: SortDirection;
-  searchTerm: string;
   showSearchResults: boolean;
   searchResults: Array<Contact>;
   /* eslint-disable */
@@ -38,7 +41,6 @@ class ProviderList extends React.Component<
       showSearchResults: false,
     };
 
-
     this.changeSortByFieldDropdown = this.changeSortByFieldDropdown.bind(this);
     this.updateSearchTerm = this.updateSearchTerm.bind(this);
     this.searchProviderList = this.searchProviderList.bind(this);
@@ -51,8 +53,6 @@ class ProviderList extends React.Component<
       target.value === "ascending"
         ? SortDirection.ascending
         : SortDirection.descending;
-
-    console.log(sortDirection);
 
     this.setState(
       {
@@ -75,7 +75,6 @@ class ProviderList extends React.Component<
 
   updateSearchTerm(event: React.SyntheticEvent): void {
     const target = event.target as HTMLInputElement;
-    console.log("bo");
     this.setState({
       searchTerm: target.value,
     });
@@ -101,24 +100,23 @@ class ProviderList extends React.Component<
       []
     );
 
-    this.setState({
-      searchResults: searchResults,
-      showSearchResults: !!this.state.searchTerm,
-    }, this.sortByField);
-  
+    this.setState(
+      {
+        searchResults: searchResults,
+        showSearchResults: !!this.state.searchTerm,
+      },
+      this.sortByField
+    );
   }
 
   sortByField(): void {
     const fieldName = this.state.sortBy;
     const providerContacts = this.state.showSearchResults
-    ? this.state.searchResults
-    : this.props.contacts;
+      ? this.state.searchResults
+      : this.props.contacts;
     const ascendingOrder = this.state.sortDirection === SortDirection.ascending;
 
-    console.log("sortByField");
     providerContacts.sort((a, b) => {
-      console.log(a[fieldName]);
-      console.log(b[fieldName]);
       if (a[fieldName] < b[fieldName]) {
         return ascendingOrder ? -1 : 1;
       } else if (a[fieldName] > b[fieldName]) {
@@ -139,25 +137,41 @@ class ProviderList extends React.Component<
 
     data.forEach((record) => {
       const recordValues = Object.values(record);
+      const recordKeys = Object.keys(record);
 
-      for (let i = 0; i < recordValues.length; i++) {
+      for (let i = 1; i < recordValues.length; i++) {
         cells.push(
           <div key={JSON.stringify(record) + " " + i} className="cell">
-            <p>{recordValues[i]}</p>
+            <p>
+              {recordKeys[i] !== Fields.EMAIL_ADDRESS.toString() ? (
+                recordValues[i]
+              ) : (
+                <a href={`mailto:${recordValues[i]}`}>{recordValues[i]}</a>
+              )}
+            </p>
           </div>
         );
       }
 
       cells.push(
         <div key={JSON.stringify(record) + " delete"} className="cell">
-          <button className="action-button">
-            <span>🖊️</span> Edit
+          <button
+            className="action-button"
+            onClick={() => this.props.openFormPanel(Action.edit, record)}
+          >
+            <span role="img" aria-label="edit-icon">
+              🖊️
+            </span>{" "}
+            Edit
           </button>
           <button
             className="action-button"
-            onClick={() => this.props.deleteProvider(record)}
+            onClick={() => this.props.deleteProvider(record.id)}
           >
-            <span>❌</span> Delete
+            <span role="img" aria-label="delete-icon">
+              ❌
+            </span>{" "}
+            Delete
           </button>
         </div>
       );
@@ -201,6 +215,13 @@ class ProviderList extends React.Component<
             className="add-new-provider-button"
             type="button"
             value="➕ Add New Provider"
+            onClick={() => this.props.openFormPanel(Action.add, null)}
+          />
+          <input
+            className="add-new-provider-button"
+            type="button"
+            value="☠️ Delete All Providers"
+            onClick={this.props.resetProviderList}
           />
           <div className="search-bar-container">
             <input
@@ -261,6 +282,7 @@ class ProviderList extends React.Component<
             </div>
           </div>
         </div>
+        <span className="results">{data.length} results</span>
         {providerDataTable}
       </div>
     );
