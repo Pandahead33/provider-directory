@@ -20,11 +20,11 @@ export default function ContactForm(props: FormProps): ReactElement {
   const [errorMessages, setErrorMessages] = useState(new Map());
 
   useEffect(() => {
-    firstName.set(props.initialData?.firstName || '');
-    lastName.set(props.initialData?.lastName || '');
-    emailAddress.set(props.initialData?.emailAddress || '');
-    speciality.set(props.initialData?.speciality || 'N/A');
-    practiceName.set(props.initialData?.practiceName || '');
+    firstName.set(props.initialData?.firstName || "");
+    lastName.set(props.initialData?.lastName || "");
+    emailAddress.set(props.initialData?.emailAddress || "");
+    speciality.set(props.initialData?.speciality || "N/A");
+    practiceName.set(props.initialData?.practiceName || "");
   }, [props.initialData]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {

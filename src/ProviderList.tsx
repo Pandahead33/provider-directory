@@ -229,29 +229,33 @@ class ProviderList extends React.Component<
             <div className="sort-direction">
               <div>
                 <label htmlFor="ascending">
-                <input
-                  type="radio"
-                  name="sortDirection"
-                  id="ascending"
-                  value="ascending"
-                  onChange={this.setSortDirection}
-                  checked={this.state.sortDirection === SortDirection.ascending}
-                />
-                Ascending</label>
+                  <input
+                    type="radio"
+                    name="sortDirection"
+                    id="ascending"
+                    value="ascending"
+                    onChange={this.setSortDirection}
+                    checked={
+                      this.state.sortDirection === SortDirection.ascending
+                    }
+                  />
+                  Ascending
+                </label>
               </div>
               <div>
                 <label htmlFor="descending">
-                <input
-                  type="radio"
-                  name="sortDirection"
-                  id="descending"
-                  value="descending"
-                  onChange={this.setSortDirection}
-                  checked={
-                    this.state.sortDirection === SortDirection.descending
-                  }
-                />
-                Descending</label>
+                  <input
+                    type="radio"
+                    name="sortDirection"
+                    id="descending"
+                    value="descending"
+                    onChange={this.setSortDirection}
+                    checked={
+                      this.state.sortDirection === SortDirection.descending
+                    }
+                  />
+                  Descending
+                </label>
               </div>
             </div>
           </div>
