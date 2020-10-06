@@ -23,6 +23,12 @@ exports[`render and matches snapshot 1`] = `
         type="button"
         value="☠️ Delete All Providers"
       />
+      <input
+        className="add-new-provider-button"
+        onClick={[Function]}
+        type="button"
+        value="🔄 Reset App to Default"
+      />
       <div
         className="search-bar-container"
       >
@@ -112,7 +118,7 @@ exports[`render and matches snapshot 1`] = `
     <span
       className="results"
     >
-      1
+      5
        results
     </span>
     <div
@@ -175,6 +181,144 @@ exports[`render and matches snapshot 1`] = `
           className="cell"
         >
           <p>
+            Zebra
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Elephantress
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            <a
+              href="mailto:safari@joe.tech"
+            >
+              safari@joe.tech
+            </a>
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Other
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Safari Joe Veterinary Institute
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="edit-icon"
+              role="img"
+            >
+              🖊️
+            </span>
+             
+            Edit
+          </button>
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="delete-icon"
+              role="img"
+            >
+              ❌
+            </span>
+             
+            Delete
+          </button>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Sleepy
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Jimbo
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            <a
+              href="mailto:nick@nite.neutron"
+            >
+              nick@nite.neutron
+            </a>
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Somnologist
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Sleepy Hollows Clinic
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="edit-icon"
+              role="img"
+            >
+              🖊️
+            </span>
+             
+            Edit
+          </button>
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="delete-icon"
+              role="img"
+            >
+              ❌
+            </span>
+             
+            Delete
+          </button>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
             Bob
           </p>
         </div>
@@ -208,6 +352,144 @@ exports[`render and matches snapshot 1`] = `
         >
           <p>
             Practice Name
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="edit-icon"
+              role="img"
+            >
+              🖊️
+            </span>
+             
+            Edit
+          </button>
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="delete-icon"
+              role="img"
+            >
+              ❌
+            </span>
+             
+            Delete
+          </button>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Adam
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Smith
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            <a
+              href="mailto:westward@expansion.com"
+            >
+              westward@expansion.com
+            </a>
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            General Medicine
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Capital Practitioners Primary Care
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="edit-icon"
+              role="img"
+            >
+              🖊️
+            </span>
+             
+            Edit
+          </button>
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="delete-icon"
+              role="img"
+            >
+              ❌
+            </span>
+             
+            Delete
+          </button>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Dan
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Smith
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            <a
+              href="mailto:sam@last.name"
+            >
+              sam@last.name
+            </a>
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Podiatrist
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Generic Foot Meds
           </p>
         </div>
         <div

@@ -21,6 +21,11 @@ exports[`render and matches snapshot 1`] = `
       type="button"
       value="☠️ Delete All Providers"
     />
+    <input
+      className="add-new-provider-button"
+      type="button"
+      value="🔄 Reset App to Default"
+    />
     <div
       className="search-bar-container"
     >

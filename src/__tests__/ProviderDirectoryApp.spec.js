@@ -48,7 +48,7 @@ test('remove action should remove from provider list', () => {
     // remove added contact
     fireEvent.click(screen.getAllByText("❌")[0]);
 
-    expect(screen.getAllByText("Hasselhoff").length).toBe(1);
+    expect(screen.getAllByText("Hasselhoff").length).toBe(2);
 });
 
 

@@ -24,32 +24,66 @@ class ProviderDirectoryApp extends React.Component<
   unknown,
   ProviderDirectoryAppState
 > {
+  initialState: ProviderDirectoryAppState = {
+    history: [
+      {
+        index: 0,
+        action: Action.add,
+        deletedRecord: undefined,
+        contacts: [
+          {
+            id: "1",
+            firstName: "Bob",
+            lastName: "Smith",
+            emailAddress: "bob@smith.com",
+            speciality: "General Medicine",
+            practiceName: "Practice Name",
+          },
+          {
+            id: "ecf54597-f668-48f0-af8f-1a654d80f5ec",
+            firstName: "Sleepy",
+            lastName: "Jimbo",
+            emailAddress: "nick@nite.neutron",
+            speciality: "Somnologist",
+            practiceName: "Sleepy Hollows Clinic",
+          },
+          {
+            id: "98e5eccc-1f6d-47f3-9882-e57cd93a73f9",
+            firstName: "Adam",
+            lastName: "Smith",
+            emailAddress: "westward@expansion.com",
+            speciality: "General Medicine",
+            practiceName: "Capital Practitioners Primary Care",
+          },
+          {
+            id: "7494e300-d378-4095-a362-dc452d3f8f27",
+            firstName: "Zebra",
+            lastName: "Elephantress",
+            emailAddress: "safari@joe.tech",
+            speciality: "Other",
+            practiceName: "Safari Joe Veterinary Institute",
+          },
+          {
+            id: "dbd8f84c-79ac-430f-8463-56057a53158a",
+            firstName: "Dan",
+            lastName: "Smith",
+            emailAddress: "sam@last.name",
+            speciality: "Podiatrist",
+            practiceName: "Generic Foot Meds",
+          },
+        ],
+      },
+    ],
+    stepNumber: 0,
+    providerFormAction: Action.add,
+    editRecord: null,
+    showContactForm: false,
+    showActionSuccessMessage: false,
+  };
+
   constructor(props: unknown) {
     super(props);
-    this.state = {
-      history: [
-        {
-          index: 0,
-          action: Action.add,
-          deletedRecord: undefined,
-          contacts: [
-            {
-              id: "1",
-              firstName: "Bob",
-              lastName: "Smith",
-              emailAddress: "bob@smith.com",
-              speciality: "General Medicine",
-              practiceName: "Practice Name",
-            },
-          ],
-        },
-      ],
-      stepNumber: 0,
-      providerFormAction: Action.add,
-      editRecord: null,
-      showContactForm: window.innerWidth > 1226,
-      showActionSuccessMessage: false,
-    };
+    this.state = this.initialState;
 
     this.addRow = this.addRow.bind(this);
     this.editRow = this.editRow.bind(this);
@@ -57,6 +91,7 @@ class ProviderDirectoryApp extends React.Component<
     this.openFormPanel = this.openFormPanel.bind(this);
     this.closeFormPanel = this.closeFormPanel.bind(this);
     this.resetHistory = this.resetHistory.bind(this);
+    this.resetAppToDefault = this.resetAppToDefault.bind(this);
   }
 
   scrollToTop(): void {
@@ -72,8 +107,6 @@ class ProviderDirectoryApp extends React.Component<
         stepNumber: Number(savedStepNumber),
       });
     }
-
-    localStorage.clear();
   }
 
   addRow(record: Contact): void {
@@ -224,6 +257,14 @@ class ProviderDirectoryApp extends React.Component<
     }
   }
 
+  resetAppToDefault(): void {
+    const confirmationMessage = "Reset to initial state? This can't be undone.";
+    if (window.confirm(confirmationMessage)) {
+      localStorage.clear();
+      this.setState(this.initialState);
+    }
+  }
+
   displayActionSuccessMessage(): void {
     const messageDurationInMilliseconds = 2000;
 
@@ -320,6 +361,26 @@ class ProviderDirectoryApp extends React.Component<
     });
   }
 
+  determineSuccessActionMessage(action: Action): ReactElement | null {
+    if (!this.state.showActionSuccessMessage) {
+      return null;
+    }
+
+    const actionMessages: (action: Action) => string = (action: Action) =>
+      ({
+        add: "added",
+        edit: "edited",
+        delete: "deleted",
+        reset: "reset",
+      }[action] || action.toString());
+
+    return (
+      <div className="success-message">
+        {`Contact successfully ${actionMessages(action)}!`}
+      </div>
+    );
+  }
+
   render(): ReactElement {
     const history: Array<History> = [...this.state.history];
     const current = history[this.state.stepNumber];
@@ -336,21 +397,13 @@ class ProviderDirectoryApp extends React.Component<
             closeForm={this.closeFormPanel}
           />
         ) : null}
-        {this.state.showActionSuccessMessage ? (
-          <div className="success-message">
-            Contact successfully{" "}
-            {current.action === Action.add.toString()
-              ? "added!"
-              : current.action === Action.edit.toString()
-              ? "edited!"
-              : "deleted!"}
-          </div>
-        ) : null}
+        {current ? this.determineSuccessActionMessage(current.action) : null}
         <ProviderList
           contacts={current.contacts || []}
           deleteProvider={this.deleteRow}
           openFormPanel={this.openFormPanel}
           resetProviderList={this.resetHistory}
+          resetAppToDefault={this.resetAppToDefault}
         />
         <div className="action-history">
           <h1>Action History</h1>

@@ -13,6 +13,7 @@ interface ProviderListProps {
   deleteProvider: (id: string) => void;
   openFormPanel: (actionType: Action, record: Contact | null) => void;
   resetProviderList: () => void;
+  resetAppToDefault: () => void;
 }
 
 interface ProviderListState {
@@ -193,16 +194,22 @@ class ProviderList extends React.Component<
         <div className="search-container">
           <h1>Provider List</h1>
           <input
-            className="add-new-provider-button"
+            className="provider-button"
             type="button"
             value="➕ Add New Provider"
             onClick={() => this.props.openFormPanel(Action.add, null)}
           />
           <input
-            className="add-new-provider-button"
+            className="provider-button"
             type="button"
             value="☠️ Delete All Providers"
             onClick={this.props.resetProviderList}
+          />
+          <input
+            className="provider-button"
+            type="button"
+            value="🔄 Reset to Default"
+            onClick={this.props.resetAppToDefault}
           />
           <div className="search-bar-container">
             <input

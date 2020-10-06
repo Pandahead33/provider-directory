@@ -190,7 +190,7 @@ input[type="radio"] {
   color: red;
 }
 
-.provider-list .search-container .add-new-provider-button {
+.provider-list .search-container .provider-button {
   vertical-align: super;
 }
 
@@ -298,7 +298,7 @@ input[type="radio"] {
   padding: 10px;
 }
 
-input.add-new-provider-button:nth-child(3) {
+input.provider-button {
   margin-left: 10px;
   margin-bottom: 40px;
 }
@@ -337,9 +337,18 @@ input.add-new-provider-button:nth-child(3) {
     padding-bottom: 30px;
   }
 
-  input.add-new-provider-button:nth-child(3) {
+  input.provider-button {
     margin-left: 10px;
     margin-top: -10px;
+  }
+}
+@media (max-width: 904px) {
+  .search-container > h1 {
+    margin-right: 8px;
+  }
+  input.provider-button {
+    margin-left: 1px;
+    padding: 5px 2px;
   }
 }
 
@@ -433,15 +442,15 @@ input.add-new-provider-button:nth-child(3) {
     margin: 10px;
   }
 
-  input.add-new-provider-button {
+  input.provider-button {
     display: block;
     margin-bottom: 20px;
     margin-top: -10px;
     width: 100%;
+    margin-left: 0;
   }
 
-  input.add-new-provider-button:nth-child(3) {
+  input.provider-button:nth-child(4) {
     margin-bottom: 50px;
-    margin-left: 0;
   }
 }
