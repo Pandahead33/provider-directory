@@ -81,9 +81,6 @@ class ProviderDirectoryApp extends React.Component<
     const contacts = [...history[history.length - 1].contacts];
     const nextStep = this.state.stepNumber + 1;
 
-    console.log({ nextStep, contacts });
-    console.log("adding");
-
     contacts.push({
       id: record.id,
       firstName: record.firstName,
