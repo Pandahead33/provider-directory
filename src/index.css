@@ -419,7 +419,7 @@ input.provider-button {
 
   main > .provider-list {
     grid-area: search;
-    min-height: 850px;
+    min-height: 890px;
   }
 
   .provider-list .search-results-container {
