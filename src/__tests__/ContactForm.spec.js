@@ -2,7 +2,7 @@ import React from "react"
 import {render, screen, fireEvent} from '@testing-library/react'
 import { create } from "react-test-renderer";
 import ContactForm from "../ContactForm";
-import Fields from "../Fields";
+import Action from "../Action";
 
 test('render and matches snapshot', () => {
     expect(create(<ContactForm />).toJSON()).toMatchSnapshot();
@@ -60,7 +60,7 @@ test.each`
     ${"email address has no domain"} | ${"igetspammed1234@"}          | ${1}
     ${"email address has no url"}    | ${"igetspammed1234@t."}        | ${1}
     ${"valid email address"}         | ${"igetspammed1234@gmail.com"} | ${0}
-`('validate form change where $meaning', async ({field, value, expectedErrorMessages}) => {
+`('validate form change where $meaning', ({field, value, expectedErrorMessages}) => {
     render(<ContactForm />);
 
     const emailAddressInput = screen.getByLabelText('Email Address');
@@ -70,7 +70,7 @@ test.each`
     expect(emailAddressInput.value).toBe(value);
 
     if (expectedErrorMessages === 1) {
-        const errorMessage = await screen.findByText("Email Address must be in example@gmail.com format.");
+        const errorMessage = screen.queryByText("Email Address must be in example@gmail.com format.");
         expect(errorMessage).toBeTruthy();
     } else {
         const errorMessage = screen.queryByText("Email Address must be in example@gmail.com format.");
@@ -82,7 +82,7 @@ test.each`
     meaning                          | value                          | expectedErrorMessages
     ${"first name includes number"}  | ${"B0b"}                       | ${1}
     ${"valid first name"}            | ${"Bob"}                       | ${0}
-`('validate first name form change where $meaning', async ({field, value, expectedErrorMessages}) => {
+`('validate first name form change where $meaning', ({field, value, expectedErrorMessages}) => {
     render(<ContactForm />);
 
     const firstNameInput = screen.getByLabelText('First Name');
@@ -92,7 +92,7 @@ test.each`
     expect(firstNameInput.value).toBe(value);
 
     if (expectedErrorMessages === 1) {
-        const errorMessage = await screen.findByText("First Name should not include numbers");
+        const errorMessage = screen.queryByText("First Name should not include numbers");
         expect(errorMessage).toBeTruthy();
     } else {
         const errorMessage = screen.queryByText("First Name should not include numbers`");
@@ -104,7 +104,7 @@ test.each`
     meaning                         | value                            | expectedErrorMessages
     ${"last name includes number"}  | ${"Sm1th"}                       | ${1}
     ${"valid last name"}            | ${"Smith"}                       | ${0}
-`('validate first name form change where $meaning', async ({field, value, expectedErrorMessages}) => {
+`('validate first name form change where $meaning', ({field, value, expectedErrorMessages}) => {
     render(<ContactForm />);
 
     const lastNameInput = screen.getByLabelText('Last Name');
@@ -114,7 +114,7 @@ test.each`
     expect(lastNameInput.value).toBe(value);
 
     if (expectedErrorMessages === 1) {
-        const errorMessage = await screen.findByText("Last Name should not include numbers");
+        const errorMessage = screen.queryByText("Last Name should not include numbers");
         expect(errorMessage).toBeTruthy();
     } else {
         const errorMessage = screen.queryByText("Last Name should not include numbers`");
@@ -130,7 +130,7 @@ test.each`
     ${"empty email to fix invalid"} | ${'Email Address'} | ${"Email Address must be in example@gmail.com format."} | ${"igetspammed1234"}   | ${""}
     ${"empty first name to fix #"}  | ${'First Name'}    | ${"First Name should not include numbers"}              | ${"0"}                 | ${""}
     ${"empty last name to fix #"}   | ${'Last Name'}     | ${"Last Name should not include numbers"}               | ${"1"}                 | ${""}
-`('should $scenario error message after fixing', async ({field, invalidValue, errorMessage, fixedValue}) => {
+`('should $scenario error message after fixing', ({field, invalidValue, errorMessage, fixedValue}) => {
     // insert invalid value for field
     render(<ContactForm />);
 
@@ -139,7 +139,7 @@ test.each`
     fireEvent.change(inputNode, { target: { value: invalidValue}});
 
     // error message should appear 
-    const beforeFixErrorMessage = await screen.findByText(errorMessage);
+    const beforeFixErrorMessage = screen.queryByText(errorMessage);
     expect(beforeFixErrorMessage).toBeTruthy();
 
     // fix e-mail
@@ -150,14 +150,84 @@ test.each`
     expect(afterFixErrorMessage).toBeNull();
 });
 
-test('validate form submit', () => {
+test('prevent empty required form submit', () => {
+    render(<ContactForm type={Action.add}/>);
 
+    const firstNameInput = screen.getByLabelText('First Name');
+    const lastNameInput = screen.getByLabelText('Last Name');
+    const emailAddressInput = screen.getByLabelText('Email Address');
+
+    firstNameInput.value = "";
+    lastNameInput.value = "";
+    emailAddressInput.value = "";
+
+    fireEvent.click(screen.getByText('➕ Add Provider'))
+
+
+    expect(screen.queryByText("Email Address cannot be empty")).toBeTruthy();
+    expect(screen.queryByText("First Name cannot be empty")).toBeTruthy();    
+    expect(screen.queryByText("Last Name cannot be empty")).toBeTruthy();
 });
 
-test('handleSubmit', () => {
+test('valid submission should go through with no errors', async () => {
+    const mockActOnProvider = jest.fn();
+    render(<ContactForm type={Action.add} actOnProvider={mockActOnProvider}/>);
+
+    const firstNameInput = screen.getByLabelText('First Name');
+    const lastNameInput = screen.getByLabelText('Last Name');
+    const emailAddressInput = screen.getByLabelText('Email Address');
+
+    fireEvent.change(firstNameInput, { target: { value: "Bob"}});
+    fireEvent.change(lastNameInput, { target: { value: "Smith"}});
+    fireEvent.change(emailAddressInput, { target: { value: "real@email.org"}});
+
+    fireEvent.click(screen.getByText('➕ Add Provider'))
+
+    expect(screen.queryByText("Email Address cannot be empty")).toBeFalsy();
+    expect(screen.queryByText("First Name cannot be empty")).toBeFalsy();    
+    expect(screen.queryByText("Last Name cannot be empty")).toBeFalsy();
+});
+
+test('add button should show if props action type', () => {
+    render(<ContactForm type={Action.add}/>)
+    expect(screen.getByText('➕ Add Provider')).toBeTruthy();
+    expect(screen.queryByText('Edit Provider')).toBeFalsy();
+});
+
+test('edit button should show if props action type', () => {
+    render(<ContactForm type={Action.edit}/>)
+    expect(screen.getByText('Edit Provider', {selector: 'input'})).toBeTruthy();
+    expect(screen.queryByText('➕ Add Provider')).toBeFalsy();
+});
+
+test('non-required fields should update', () => {
+    render(<ContactForm />);
+
+    const practiceNameInput = screen.getByLabelText('Practice Name');
+    const specialityInput = screen.getByLabelText('Speciality');
+
+    fireEvent.change(practiceNameInput, { target: { value: "Bob's Pharmacy Palace"}});
+    fireEvent.change(specialityInput, { target: { value: "Somnologist"}});
+
+    expect(practiceNameInput.value).toBe("Bob's Pharmacy Palace");
+    expect(specialityInput.value).toBe("Somnologist");
+});
+
+test('null speciality should default to N/A string', () => {
+    render(<ContactForm />);
+
+    const specialityInput = screen.getByLabelText('Speciality');
+
+    fireEvent.change(specialityInput, { target: { value: null}});
+
+    expect(specialityInput.value).toBe("N/A");
+});
+
+/*test('handleSubmit', () => {
 
 });
 
 test('handleFormChange', () => {
 
 });
+*/

@@ -158,7 +158,7 @@ export default function ContactForm(props: FormProps): ReactElement {
           <select
             id="speciality"
             name="speciality"
-            value={speciality.value || ""}
+            value={speciality.value}
             onChange={(event) =>
               speciality.onChange(event, new Map(), setErrorMessages)
             }

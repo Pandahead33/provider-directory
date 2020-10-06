@@ -1,29 +1,29 @@
+import React from "react"
+import {render, screen, fireEvent} from '@testing-library/react'
+import { create } from "react-test-renderer";
+
 import ProviderDirectoryApp from "../ProviderDirectoryApp";
 
-/*test('render and matches snapshot', () => {
+window.scrollTo = jest.fn()
+
+test('render and matches snapshot', () => {
     expect(create(<ProviderDirectoryApp />).toJSON()).toMatchSnapshot();
-});*/
+});
 
 test('add action should prepend to list on submit', () => {
+    const {container} = render(<ProviderDirectoryApp />);
 
-});
+    fireEvent.click(screen.getByText("➕ Add New Provider"));
 
-test('remove action should remove from history list', () => {
+    const firstNameInput = screen.getByLabelText('First Name');
+    const lastNameInput = screen.getByLabelText('Last Name');
+    const emailAddressInput = screen.getByLabelText('Email Address');
 
-});
+    fireEvent.change(firstNameInput, { target: { value: "David"}});
+    fireEvent.change(lastNameInput, { target: { value: "Hasselhoff"}});
+    fireEvent.change(emailAddressInput, { target: { value: "the@dave.co"}});
 
-test.each`
-    scenario  | expected 
-    ${"add"}  |
-    ${"edit"} |
-`('$scenario button should open $scenario form', () => {
+    fireEvent.click(screen.getByText('➕ Add Provider'))
 
-});
-
-test('edit should cause data to update', () => {
-
-});
-
-test("should persist data with localStorage", () => {
-
+    expect(screen.getAllByText("Hasselhoff").length).toBeGreaterThan(0);
 });

@@ -121,6 +121,7 @@ Possible future enhancements:
 - Spring Boot app for Data Persistence Option B.
 - Async operations
 - Scheduling system 
+- More reusable components, particularly for the Provider List's data table.
 
 # Building a Production Release
 This section is copied from Create React App. 

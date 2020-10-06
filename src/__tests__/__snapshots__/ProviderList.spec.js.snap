@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render and matches snapshot 1`] = `
+<div
+  className="provider-list"
+>
+  <div
+    className="search-container"
+  >
+    <h1>
+      Provider List
+    </h1>
+    <input
+      className="add-new-provider-button"
+      onClick={[Function]}
+      type="button"
+      value="➕ Add New Provider"
+    />
+    <input
+      className="add-new-provider-button"
+      type="button"
+      value="☠️ Delete All Providers"
+    />
+    <div
+      className="search-bar-container"
+    >
+      <input
+        className="search"
+        onChange={[Function]}
+        placeholder="Search..."
+        type="search"
+      />
+      <label
+        htmlFor="sortBy"
+      >
+        <div
+          className="sort-by-label"
+        >
+          Sort By
+        </div>
+        <select
+          id="sortBy"
+          name="sortBy"
+          onChange={[Function]}
+          value="lastName"
+        >
+          <option
+            value="firstName"
+          >
+            First Name
+          </option>
+          <option
+            value="lastName"
+          >
+            Last Name
+          </option>
+          <option
+            value="emailAddress"
+          >
+            Email Address
+          </option>
+          <option
+            value="speciality"
+          >
+            Speciality
+          </option>
+          <option
+            value="practiceName"
+          >
+            Practice Name
+          </option>
+        </select>
+      </label>
+      <div
+        className="sort-direction"
+      >
+        <div>
+          <label
+            htmlFor="ascending"
+          >
+            <input
+              checked={true}
+              id="ascending"
+              name="sortDirection"
+              onChange={[Function]}
+              type="radio"
+              value="ascending"
+            />
+            Ascending
+          </label>
+        </div>
+        <div>
+          <label
+            htmlFor="descending"
+          >
+            <input
+              checked={false}
+              id="descending"
+              name="sortDirection"
+              onChange={[Function]}
+              type="radio"
+              value="descending"
+            />
+            Descending
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span
+    className="results"
+  >
+    0
+     results
+  </span>
+  <p>
+    No providers found.
+  </p>
+</div>
+`;

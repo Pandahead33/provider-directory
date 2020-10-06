@@ -1,0 +1,280 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render and matches snapshot 1`] = `
+<main>
+  <div
+    className="provider-list"
+  >
+    <div
+      className="search-container"
+    >
+      <h1>
+        Provider List
+      </h1>
+      <input
+        className="add-new-provider-button"
+        onClick={[Function]}
+        type="button"
+        value="➕ Add New Provider"
+      />
+      <input
+        className="add-new-provider-button"
+        onClick={[Function]}
+        type="button"
+        value="☠️ Delete All Providers"
+      />
+      <div
+        className="search-bar-container"
+      >
+        <input
+          className="search"
+          onChange={[Function]}
+          placeholder="Search..."
+          type="search"
+        />
+        <label
+          htmlFor="sortBy"
+        >
+          <div
+            className="sort-by-label"
+          >
+            Sort By
+          </div>
+          <select
+            id="sortBy"
+            name="sortBy"
+            onChange={[Function]}
+            value="lastName"
+          >
+            <option
+              value="firstName"
+            >
+              First Name
+            </option>
+            <option
+              value="lastName"
+            >
+              Last Name
+            </option>
+            <option
+              value="emailAddress"
+            >
+              Email Address
+            </option>
+            <option
+              value="speciality"
+            >
+              Speciality
+            </option>
+            <option
+              value="practiceName"
+            >
+              Practice Name
+            </option>
+          </select>
+        </label>
+        <div
+          className="sort-direction"
+        >
+          <div>
+            <label
+              htmlFor="ascending"
+            >
+              <input
+                checked={true}
+                id="ascending"
+                name="sortDirection"
+                onChange={[Function]}
+                type="radio"
+                value="ascending"
+              />
+              Ascending
+            </label>
+          </div>
+          <div>
+            <label
+              htmlFor="descending"
+            >
+              <input
+                checked={false}
+                id="descending"
+                name="sortDirection"
+                onChange={[Function]}
+                type="radio"
+                value="descending"
+              />
+              Descending
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span
+      className="results"
+    >
+      1
+       results
+    </span>
+    <div
+      style={
+        Object {
+          "height": "0",
+        }
+      }
+    >
+      <div
+        className="provider-table-heading"
+      >
+        <div
+          className="table-header"
+        >
+          <p>
+            First Name
+          </p>
+        </div>
+        <div
+          className="table-header"
+        >
+          <p>
+            Last Name
+          </p>
+        </div>
+        <div
+          className="table-header"
+        >
+          <p>
+            Email Address
+          </p>
+        </div>
+        <div
+          className="table-header"
+        >
+          <p>
+            Speciality
+          </p>
+        </div>
+        <div
+          className="table-header"
+        >
+          <p>
+            Practice Name
+          </p>
+        </div>
+        <div
+          className="table-header"
+        >
+          <p>
+            Action
+          </p>
+        </div>
+      </div>
+      <div
+        className="search-results-container"
+      >
+        <div
+          className="cell"
+        >
+          <p>
+            Bob
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Smith
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            <a
+              href="mailto:bob@smith.com"
+            >
+              bob@smith.com
+            </a>
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            General Medicine
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <p>
+            Practice Name
+          </p>
+        </div>
+        <div
+          className="cell"
+        >
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="edit-icon"
+              role="img"
+            >
+              🖊️
+            </span>
+             
+            Edit
+          </button>
+          <button
+            className="action-button"
+            onClick={[Function]}
+          >
+            <span
+              aria-label="delete-icon"
+              role="img"
+            >
+              ❌
+            </span>
+             
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="action-history"
+  >
+    <h1>
+      Action History
+    </h1>
+    <ol>
+      <li>
+        <span>
+          Added
+           
+          <a
+            href="mailto:bob@smith.com"
+          >
+            Bob
+             
+            Smith
+          </a>
+           
+          from Practice Name 
+           
+          (General Medicine)
+        </span>
+        <span
+          className="undo-button"
+        >
+          <b>
+            Current history
+          </b>
+        </span>
+      </li>
+    </ol>
+  </div>
+</main>
+`;

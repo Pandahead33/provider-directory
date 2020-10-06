@@ -74,9 +74,9 @@ class ProviderList extends React.Component<
     let searchResults = [...contacts];
     const fitsSearchCriteria = (contact: Contact) =>
       Object.values(contact).reduce(
-        (boolean: boolean, field) =>
+        (fitsSearchAccumulator: boolean, field) =>
           field.toUpperCase().includes(this.state.searchTerm.toUpperCase()) ||
-          boolean,
+          fitsSearchAccumulator,
         false
       );
 
@@ -110,12 +110,6 @@ class ProviderList extends React.Component<
     });
 
     return providerContacts;
-  }
-
-  doProviderSearch(): void {
-    this.setState({
-      showSearchResults: true,
-    });
   }
 
   render(): ReactElement {
@@ -214,11 +208,6 @@ class ProviderList extends React.Component<
             <input
               className="search"
               placeholder="Search..."
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  this.doProviderSearch();
-                }
-              }}
               onChange={this.updateSearchTerm}
               type="search"
             />
@@ -239,6 +228,7 @@ class ProviderList extends React.Component<
             </label>
             <div className="sort-direction">
               <div>
+                <label htmlFor="ascending">
                 <input
                   type="radio"
                   name="sortDirection"
@@ -247,9 +237,10 @@ class ProviderList extends React.Component<
                   onChange={this.setSortDirection}
                   checked={this.state.sortDirection === SortDirection.ascending}
                 />
-                <label htmlFor="ascending">Ascending</label>
+                Ascending</label>
               </div>
               <div>
+                <label htmlFor="descending">
                 <input
                   type="radio"
                   name="sortDirection"
@@ -260,7 +251,7 @@ class ProviderList extends React.Component<
                     this.state.sortDirection === SortDirection.descending
                   }
                 />
-                <label htmlFor="ascending">Descending</label>
+                Descending</label>
               </div>
             </div>
           </div>
